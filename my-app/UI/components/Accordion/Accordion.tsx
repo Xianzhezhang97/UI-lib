@@ -54,7 +54,7 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(
           <span className="text-sm font-medium text-gray-900">{title}</span>
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.2,ease:[0,0.4,0.25,1] }}
           >
             {icon || <ChevronDownIcon className="h-5 w-5 text-gray-500" />}
           </motion.div>
@@ -66,7 +66,7 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(
             height: isOpen ? contentRef.current?.scrollHeight : 0,
             opacity: isOpen ? 1 : 0,
           }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.2,ease:[0.25,0.1,0.25,1] }}
           className="overflow-hidden"
         >
           <div className="px-4 pb-3 text-sm text-gray-500">{children}</div>

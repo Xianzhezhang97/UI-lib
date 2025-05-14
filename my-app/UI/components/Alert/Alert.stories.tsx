@@ -7,6 +7,18 @@ const meta = {
   component: Alert,
   parameters: {
     layout: 'centered',
+    docs: {
+      story: {
+        inline: true,
+        iframeHeight: '100px',
+      },
+    },
+    grid: {
+      gridOn: true,
+      columns: 2,
+      gap: '16px',
+      padding: '16px',
+    },
   },
   tags: ['autodocs'],
   argTypes: {
