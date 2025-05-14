@@ -1,9 +1,9 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Input } from '~/components/Input/Input';
-import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Input } from './Input';
+import { MagnifyingGlassIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
-const meta = {
+const meta: Meta<typeof Input> = {
   title: 'Components/Input',
   component: Input,
   parameters: {
@@ -19,58 +19,76 @@ const meta = {
       control: 'select',
       options: ['sm', 'md', 'lg'],
     },
-    fullWidth: {
-      control: 'boolean',
-    },
     disabled: {
       control: 'boolean',
     },
-    onChange: {
-      action: 'changed',
+    fullWidth: {
+      control: 'boolean',
     },
-    onBlur: {
-      action: 'blurred',
-    },
-    onFocus: {
-      action: 'focused',
-    },
-  },
-} satisfies Meta<typeof Input>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {
-  args: {
-    placeholder: 'Enter text...',
   },
 };
 
-export const WithLabel: Story = {
+export default meta;
+type Story = StoryObj<typeof Input>;
+
+export const Default: Story = {
   args: {
     label: 'Label',
-    placeholder: 'Enter text...',
+    placeholder: 'Placeholder',
   },
 };
 
 export const WithHelperText: Story = {
   args: {
-    label: 'Label',
-    placeholder: 'Enter text...',
-    helperText: 'This is a helper text',
+    label: 'Email',
+    placeholder: 'Enter your email',
+    helperText: 'We will never share your email with anyone else.',
   },
 };
 
 export const WithError: Story = {
   args: {
-    label: 'Label',
-    placeholder: 'Enter text...',
-    error: 'This field is required',
+    label: 'Email',
+    placeholder: 'Enter your email',
+    error: 'Please enter a valid email address',
+  },
+};
+
+export const Small: Story = {
+  args: {
+    label: 'Small Input',
+    size: 'sm',
+    placeholder: 'Small input',
+  },
+};
+
+export const Large: Story = {
+  args: {
+    label: 'Large Input',
+    size: 'lg',
+    placeholder: 'Large input',
+  },
+};
+
+export const Filled: Story = {
+  args: {
+    label: 'Filled Input',
+    variant: 'filled',
+    placeholder: 'Filled input',
+  },
+};
+
+export const Flushed: Story = {
+  args: {
+    label: 'Flushed Input',
+    variant: 'flushed',
+    placeholder: 'Flushed input',
   },
 };
 
 export const WithLeftIcon: Story = {
   args: {
+    label: 'Search',
     placeholder: 'Search...',
     leftElement: <MagnifyingGlassIcon className="h-5 w-5" />,
   },
@@ -78,88 +96,25 @@ export const WithLeftIcon: Story = {
 
 export const WithRightIcon: Story = {
   args: {
-    placeholder: 'Clear input',
-    rightElement: <XMarkIcon className="h-5 w-5" />,
-  },
-};
-
-export const WithBothIcons: Story = {
-  args: {
-    placeholder: 'Search...',
-    leftElement: <MagnifyingGlassIcon className="h-5 w-5" />,
-    rightElement: <XMarkIcon className="h-5 w-5" />,
-  },
-};
-
-export const Outline: Story = {
-  args: {
-    variant: 'outline',
-    placeholder: 'Enter text...',
-  },
-};
-
-export const Filled: Story = {
-  args: {
-    variant: 'filled',
-    placeholder: 'Enter text...',
-  },
-};
-
-export const Flushed: Story = {
-  args: {
-    variant: 'flushed',
-    placeholder: 'Enter text...',
-  },
-};
-
-export const Small: Story = {
-  args: {
-    size: 'sm',
-    placeholder: 'Enter text...',
-  },
-};
-
-export const Medium: Story = {
-  args: {
-    size: 'md',
-    placeholder: 'Enter text...',
-  },
-};
-
-export const Large: Story = {
-  args: {
-    size: 'lg',
-    placeholder: 'Enter text...',
+    label: 'Password',
+    type: 'password',
+    placeholder: 'Enter your password',
+    rightElement: <EyeIcon className="h-5 w-5" />,
   },
 };
 
 export const Disabled: Story = {
   args: {
+    label: 'Disabled Input',
+    placeholder: 'Disabled input',
     disabled: true,
-    placeholder: 'Enter text...',
   },
 };
 
 export const FullWidth: Story = {
   args: {
+    label: 'Full Width Input',
+    placeholder: 'Full width input',
     fullWidth: true,
-    placeholder: 'Enter text...',
-  },
-};
-
-export const WithValue: Story = {
-  args: {
-    label: 'Label',
-    value: 'Hello World',
-    placeholder: 'Enter text...',
-  },
-};
-
-export const WithValueAndChangeHandler: Story = {
-  args: {
-    label: 'Label',
-    value: 'Hello World',
-    placeholder: 'Enter text...',
-    onChange: (value) => console.log('Input value changed:', value),
   },
 }; 

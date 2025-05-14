@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
-import { cn } from '../../utils/cn';
+import { cn } from '@/utils/cn';
 import { CheckIcon } from '@heroicons/react/24/outline';
 
 export interface CheckboxProps extends Omit<HTMLMotionProps<'div'>, 'children' | 'onChange'> {

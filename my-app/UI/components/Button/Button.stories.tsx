@@ -1,9 +1,9 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '~/components/Button/Button';
-import { ArrowRightIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { Button } from './Button';
+import { PlusIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 
-const meta = {
+const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
   parameters: {
@@ -19,118 +19,101 @@ const meta = {
       control: 'select',
       options: ['sm', 'md', 'lg'],
     },
+    disabled: {
+      control: 'boolean',
+    },
     isLoading: {
       control: 'boolean',
     },
     fullWidth: {
       control: 'boolean',
     },
-    disabled: {
-      control: 'boolean',
-    },
-    onClick: {
-      action: 'clicked',
-    },
   },
-} satisfies Meta<typeof Button>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Button>;
 
 export const Primary: Story = {
   args: {
-    variant: 'primary',
     children: 'Button',
+    variant: 'primary',
   },
 };
 
 export const Secondary: Story = {
   args: {
-    variant: 'secondary',
     children: 'Button',
+    variant: 'secondary',
   },
 };
 
 export const Outline: Story = {
   args: {
-    variant: 'outline',
     children: 'Button',
+    variant: 'outline',
   },
 };
 
 export const Ghost: Story = {
   args: {
-    variant: 'ghost',
     children: 'Button',
+    variant: 'ghost',
   },
 };
 
 export const Link: Story = {
   args: {
-    variant: 'link',
     children: 'Button',
+    variant: 'link',
   },
 };
 
 export const Small: Story = {
   args: {
+    children: 'Button',
     size: 'sm',
-    children: 'Button',
-  },
-};
-
-export const Medium: Story = {
-  args: {
-    size: 'md',
-    children: 'Button',
   },
 };
 
 export const Large: Story = {
   args: {
-    size: 'lg',
     children: 'Button',
+    size: 'lg',
   },
 };
 
 export const WithLeftIcon: Story = {
   args: {
-    leftIcon: <CheckIcon className="h-5 w-5" />,
-    children: 'Button',
+    children: 'Add Item',
+    leftIcon: <PlusIcon className="h-5 w-5" />,
   },
 };
 
 export const WithRightIcon: Story = {
   args: {
+    children: 'Next',
     rightIcon: <ArrowRightIcon className="h-5 w-5" />,
-    children: 'Button',
   },
 };
 
 export const Loading: Story = {
   args: {
+    children: 'Loading',
     isLoading: true,
-    children: 'Button',
   },
 };
 
 export const Disabled: Story = {
   args: {
+    children: 'Disabled',
     disabled: true,
-    children: 'Button',
   },
 };
 
 export const FullWidth: Story = {
   args: {
+    children: 'Full Width Button',
     fullWidth: true,
-    children: 'Button',
-  },
-};
-
-export const WithClickHandler: Story = {
-  args: {
-    children: 'Click Me',
-    onClick: () => alert('Button clicked!'),
   },
 }; 

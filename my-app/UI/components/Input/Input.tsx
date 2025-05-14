@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
-import { cn } from '../../utils/cn';
+import { cn } from '@/utils/cn';
 
 export interface InputProps extends Omit<HTMLMotionProps<'input'>, 'children' | 'size' | 'onChange'> {
   label?: string;
