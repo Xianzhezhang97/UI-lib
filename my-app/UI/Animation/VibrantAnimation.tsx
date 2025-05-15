@@ -7,18 +7,7 @@ interface VibrantAnimationProps {
   once?: boolean;
 }
 
-// 外层容器的动画配置
 const containerVariants: Variants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.12,
-    },
-  },
-};
-
-// 每个子元素的动画
-const childVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   show: {
     opacity: 1,
@@ -42,7 +31,7 @@ export const VibrantAnimation: React.FC<VibrantAnimationProps> = ({
   once = true,
 }) => {
   return (
-    <motion.ul
+    <motion.div
       className={className}
       variants={containerVariants}
       initial='hidden'
@@ -53,16 +42,7 @@ export const VibrantAnimation: React.FC<VibrantAnimationProps> = ({
         amount: 0.25,
       }}
     >
-      {/* 自动给每个子项加上动画 */}
-      {React.Children.map(children, (child, index) => (
-        <motion.li
-          variants={childVariants}
-          key={index}
-          className={child.props.className} // ✅ 把 child 的 className 放到 motion.div 上
-        >
-          {React.cloneElement(child, { className })}
-        </motion.li>
-      ))}
-    </motion.ul>
+      {children}
+    </motion.div>
   );
 };

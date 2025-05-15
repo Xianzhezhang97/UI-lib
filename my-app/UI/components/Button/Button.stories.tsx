@@ -1,7 +1,6 @@
-import React from 'react';
+import { PlusIcon } from '@heroicons/react/24/outline';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from './Button';
-import { PlusIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -76,6 +75,13 @@ export const Small: Story = {
   },
 };
 
+export const Medium: Story = {
+  args: {
+    children: 'Button',
+    size: 'md',
+  },
+};
+
 export const Large: Story = {
   args: {
     children: 'Button',
@@ -86,14 +92,30 @@ export const Large: Story = {
 export const WithLeftIcon: Story = {
   args: {
     children: 'Add Item',
-    leftIcon: <PlusIcon className="h-5 w-5" />,
+    leftIcon: <PlusIcon className='h-5 w-5' />,
   },
 };
 
 export const WithRightIcon: Story = {
   args: {
     children: 'Next',
-    rightIcon: <ArrowRightIcon className="h-5 w-5" />,
+    rightIcon: (
+      <svg
+        width='24'
+        height='24'
+        viewBox='0 0 24 24'
+        fill='none'
+        xmlns='http://www.w3.org/2000/svg'
+      >
+        <path
+          d='M9 6L15 12L9 18'
+          stroke='currentColor'
+          stroke-width='2'
+          stroke-linecap='round'
+          stroke-linejoin='round'
+        />
+      </svg>
+    ),
   },
 };
 
@@ -116,4 +138,4 @@ export const FullWidth: Story = {
     children: 'Full Width Button',
     fullWidth: true,
   },
-}; 
+};

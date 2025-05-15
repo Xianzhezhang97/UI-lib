@@ -1,14 +1,12 @@
 import { cn } from '@/utils/cn';
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-  InformationCircleIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
+import
+  {
+    XMarkIcon
+  } from '@heroicons/react/24/outline';
+// import Icon from '@UI/Components/Icon/Icon';
+import { Typography } from '@UI/Components/Typography/Typography';
 import { HTMLMotionProps, motion } from 'framer-motion';
 import React from 'react';
-import { Typography } from '../Typography/Typography';
 
 export interface AlertProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   title?: string;
@@ -43,10 +41,10 @@ const variantStyles = {
 };
 
 const defaultIcons = {
-  info: <InformationCircleIcon className='h-5 w-5' />,
-  success: <CheckCircleIcon className='h-5 w-5' />,
-  warning: <ExclamationTriangleIcon className='h-5 w-5' />,
-  error: <ExclamationCircleIcon className='h-5 w-5' />,
+  info: <i name="info" className='h-5 w-5' />,
+  success: <i name="check-circle" className='h-5 w-5' />,
+  warning: <i name="exclamation-triangle" className='h-5 w-5' />,
+  error: <i name="exclamation-circle" className='h-5 w-5' />,
 };
 
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(

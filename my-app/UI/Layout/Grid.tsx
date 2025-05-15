@@ -58,11 +58,11 @@ export const Grid: React.FC<GridProps> = ({
         `grid-flow-${flow}`,
         alignStyles[align],
         justifyStyles[justify],
-        className
+        className,
       )}
       {...props}
     >
       {children}
     </div>
   );
-}; 
+};

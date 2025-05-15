@@ -28,6 +28,7 @@ export const ViewportAnimation = React.memo<ViewportAnimationProps>(
             ease: [0.455, 0.03, 0.515, 0.955],
             duration: 0.7,
           },
+
         }}
         {...props}
       >

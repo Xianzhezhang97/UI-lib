@@ -16,7 +16,7 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     variant: { control: 'select', options: ['elevated', 'outlined', 'filled'] },
-    padding: { control: 'select', options: ['none', 'sm', 'md', 'lg'] },
+    size: { control: 'select', options: ['sm', 'md', 'lg', 'xl'] },
   },
 } satisfies Meta<typeof Card>;
 
@@ -42,7 +42,7 @@ export const Default: Story = {
         {DefaultCardContent}
         <CardFooter>
           <Button variant='ghost'>Cancel</Button>
-          <Button>Submit</Button>
+          <Button variant='full'>Submit</Button>
         </CardFooter>
       </>
     ),
@@ -50,27 +50,43 @@ export const Default: Story = {
 };
 
 export const Elevated: Story = {
-  args: { variant: 'elevated', children: DefaultCardContent },
+  args: {
+    variant: 'elevated',
+    children: DefaultCardContent,
+  },
 };
+
 export const Outlined: Story = {
-  args: { variant: 'outlined', children: DefaultCardContent },
+  args: {
+    variant: 'outlined',
+    children: DefaultCardContent,
+  },
 };
+
 export const Filled: Story = {
-  args: { variant: 'filled', children: DefaultCardContent },
+  args: {
+    variant: 'filled',
+    children: DefaultCardContent,
+  },
 };
-export const SmallPadding: Story = {
-  args: { padding: 'sm', children: DefaultCardContent },
+
+export const Smallsize: Story = {
+  args: {
+    size: 'sm',
+    children: DefaultCardContent,
+  },
 };
-export const LargePadding: Story = {
-  args: { padding: 'lg', children: DefaultCardContent },
-};
-export const NoPadding: Story = {
-  args: { padding: 'none', children: DefaultCardContent },
+
+export const Largesize: Story = {
+  args: {
+    size: 'lg',
+    children: DefaultCardContent,
+  },
 };
 
 export const WithImage: Story = {
   args: {
-    padding: 'none',
+    size: 'md',
     children: (
       <>
         <img

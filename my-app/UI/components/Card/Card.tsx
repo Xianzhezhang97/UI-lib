@@ -4,7 +4,7 @@ import React from 'react';
 
 export interface CardProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   variant?: 'elevated' | 'outlined' | 'filled';
-  padding?: 'none' | 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   children?: React.ReactNode;
 }
 
@@ -14,27 +14,22 @@ const variantStyles = {
   filled: 'bg-gray-100',
 };
 
-const paddingStyles = {
-  none: '',
-  sm: 'p-3',
-  md: 'p-4',
-  lg: 'p-6',
+const sizeStyles = {
+  sm: 'p-[20px] rounded-[14px]',
+  md: 'p-[20px] md:p-[28px] rounded-[14px] md:rounded-[28px]',
+  lg: 'p-[20px] md:p-[28px] lg:p-[30px] rounded-[14px] md:rounded-[28px] lg:rounded-[42px]',
+  xl: 'p-[20px] md:p-[28px] lg:p-[30px] xl:p-[40px] rounded-[14px] md:rounded-[28px] lg:rounded-[42px] xl:rounded-[56px]',
 };
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   (
-    { className, variant = 'elevated', padding = 'md', children, ...props },
+    { className, variant = 'elevated', size = 'md', children, ...props },
     ref,
   ) => {
     return (
       <motion.div
         ref={ref}
-        className={cn(
-          'rounded-lg',
-          variantStyles[variant],
-          paddingStyles[padding],
-          className,
-        )}
+        className={cn(variantStyles[variant], sizeStyles[size], className)}
         {...props}
       >
         {children}
@@ -45,77 +40,69 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
 Card.displayName = 'Card';
 
+// Card Subcomponents
 export const CardHeader = React.forwardRef<
   HTMLDivElement,
-  HTMLMotionProps<'div'>
->(({ className, ...props }, ref) => {
-  return (
-    <motion.div
-      ref={ref}
-      className={cn('mb-4', className)}
-      {...props}
-    />
-  );
-});
-
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn('flex flex-col space-y-1.5 pb-4', className)}
+    {...props}
+  />
+));
 CardHeader.displayName = 'CardHeader';
 
 export const CardTitle = React.forwardRef<
-  HTMLHeadingElement,
-  HTMLMotionProps<'h3'>
->(({ className, ...props }, ref) => {
-  return (
-    <motion.h3
-      ref={ref}
-      className={cn('text-lg font-semibold text-gray-900', className)}
-      {...props}
-    />
-  );
-});
-
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h3
+    ref={ref}
+    className={cn(
+      'text-2xl font-semibold leading-none tracking-tight',
+      className,
+    )}
+    {...props}
+  />
+));
 CardTitle.displayName = 'CardTitle';
 
 export const CardDescription = React.forwardRef<
   HTMLParagraphElement,
-  HTMLMotionProps<'p'>
->(({ className, ...props }, ref) => {
-  return (
-    <motion.p
-      ref={ref}
-      className={cn('text-sm text-gray-500', className)}
-      {...props}
-    />
-  );
-});
-
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => (
+  <p
+    ref={ref}
+    className={cn('text-sm text-gray-500', className)}
+    {...props}
+  />
+));
 CardDescription.displayName = 'CardDescription';
 
 export const CardContent = React.forwardRef<
   HTMLDivElement,
-  HTMLMotionProps<'div'>
->(({ className, ...props }, ref) => {
-  return (
-    <motion.div
-      ref={ref}
-      className={cn('', className)}
-      {...props}
-    />
-  );
-});
-
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn('pt-0', className)}
+    {...props}
+  />
+));
 CardContent.displayName = 'CardContent';
 
 export const CardFooter = React.forwardRef<
   HTMLDivElement,
-  HTMLMotionProps<'div'>
->(({ className, ...props }, ref) => {
-  return (
-    <motion.div
-      ref={ref}
-      className={cn('mt-4 flex items-center justify-end gap-2', className)}
-      {...props}
-    />
-  );
-});
-
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      'flex md:flex-reverse md:flex-row  flex-col items-center pt-4 w-full gap-4',
+      className,
+    )}
+    {...props}
+  />
+));
 CardFooter.displayName = 'CardFooter';

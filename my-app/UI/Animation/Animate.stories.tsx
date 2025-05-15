@@ -288,15 +288,15 @@ export const AnimateComponent: Story = {
         content='Vibrant Animation'
       />
       <Container
-        size='md'
+        size='xl'
         className='overflow-x-auto'
       >
         <VibrantAnimation className='flex gap-4'>
-          {Array.from({ length: 20 }).map((_, index) => (
+          {Array.from({ length: 24 }).map((_, index) => (
             <Card
               key={index}
               variant='filled'
-              className='p-8'
+              className='p-8 my-8'
             >
               {index + 1}
             </Card>
@@ -307,23 +307,12 @@ export const AnimateComponent: Story = {
         variant='h4'
         content='Vibrant Animation'
       />
-      <VibrantAnimation
-        className='grid grid-cols-12 gap-4 w-full'
-        renderItem={(child, index) => (
-          <motion.div
-            key={index}
-            variants={childVariants}
-            className={child.props.className}
-          >
-            {React.cloneElement(child, { className: '' })}
-          </motion.div>
-        )}
-      >
-        {Array.from({ length: 24 }).map((_, index) => (
+      <VibrantAnimation className='grid grid-cols-12 gap-4 w-full'>
+        {Array.from({ length: 12 }).map((_, index) => (
           <Card
             key={index}
             variant='filled'
-            className='p-8 flex justify-center items-center col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3'
+            className='p-8 flex justify-center items-center col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2'
           >
             {index + 1}
           </Card>
