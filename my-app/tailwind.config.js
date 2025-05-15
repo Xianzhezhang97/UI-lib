@@ -93,6 +93,8 @@ module.exports = {
         'slide-out': 'slide-out 0.5s ease-in',
         'scale-in': 'scale-in 0.5s ease-out',
         'scale-out': 'scale-out 0.5s ease-in',
+        shimmer: 'shimmer 1.5s infinite',
+        'progress-indeterminate': 'progress-indeterminate 1.5s infinite linear',
       },
       keyframes: {
         'fade-in': {
@@ -118,6 +120,13 @@ module.exports = {
         'scale-out': {
           '0%': { transform: 'scale(1)', opacity: '1' },
           '100%': { transform: 'scale(0.95)', opacity: '0' },
+        },
+        shimmer: {
+          '100%': { transform: 'translateX(100%)' },
+        },
+        'progress-indeterminate': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
         },
       },
     },

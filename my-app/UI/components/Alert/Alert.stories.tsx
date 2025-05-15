@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { Icon } from '../Icon/Icon';
 import { Alert } from './Alert';
-import { BellIcon } from '@heroicons/react/24/outline';
 
 const meta = {
   title: 'Components/Alert',
@@ -71,7 +71,13 @@ export const WithCustomIcon: Story = {
   args: {
     title: 'Notification',
     description: 'You have a new notification.',
-    icon: <BellIcon className="h-5 w-5" />,
+    icon: (
+      <Icon
+        name='bell'
+        size='xl'
+        className='text-blue-500'
+      />
+    ),
   },
 };
 
@@ -93,4 +99,4 @@ export const DescriptionOnly: Story = {
   args: {
     description: 'Alert with description only',
   },
-}; 
+};

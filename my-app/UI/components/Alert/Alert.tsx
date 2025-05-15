@@ -1,7 +1,14 @@
-import React from 'react';
-import { motion, HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/utils/cn';
-import { XMarkIcon, InformationCircleIcon, ExclamationTriangleIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
+import { HTMLMotionProps, motion } from 'framer-motion';
+import React from 'react';
+import { Typography } from '../Typography/Typography';
 
 export interface AlertProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   title?: string;
@@ -36,10 +43,10 @@ const variantStyles = {
 };
 
 const defaultIcons = {
-  info: <InformationCircleIcon className="h-5 w-5" />,
-  success: <CheckCircleIcon className="h-5 w-5" />,
-  warning: <ExclamationTriangleIcon className="h-5 w-5" />,
-  error: <ExclamationCircleIcon className="h-5 w-5" />,
+  info: <InformationCircleIcon className='h-5 w-5' />,
+  success: <CheckCircleIcon className='h-5 w-5' />,
+  warning: <ExclamationTriangleIcon className='h-5 w-5' />,
+  error: <ExclamationCircleIcon className='h-5 w-5' />,
 };
 
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
@@ -54,7 +61,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
       icon,
       ...props
     },
-    ref
+    ref,
   ) => {
     return (
       <motion.div
@@ -62,44 +69,52 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         className={cn(
           'rounded-lg p-4',
           variantStyles[variant].container,
-          className
+          className,
         )}
-        role="alert"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
+        role='alert'
         {...props}
       >
-        <div className="flex">
-          <div className="flex-shrink-0">
-            {icon || defaultIcons[variant]}
-          </div>
-          <div className="ml-3 flex-1">
+        <div className='flex'>
+          <div className='flex-shrink-0'>{icon || defaultIcons[variant]}</div>
+          <div className='ml-3 flex-1'>
             {title && (
-              <h3 className="text-sm font-medium">{title}</h3>
+              <Typography
+                variant='h6'
+                weight='semibold'
+                className={cn(variantStyles[variant].container)}
+                color='default'
+              >
+                {title}
+              </Typography>
             )}
             {description && (
-              <div className="mt-2 text-sm">{description}</div>
+              <Typography
+                variant='p'
+                className={cn(variantStyles[variant].container)}
+                color='default'
+              >
+                {description}
+              </Typography>
             )}
           </div>
           {closable && (
-            <div className="ml-auto pl-3">
+            <div className='ml-auto pl-3'>
               <button
-                type="button"
+                type='button'
                 className={cn(
                   'inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2',
-                  variantStyles[variant].close
+                  variantStyles[variant].close,
                 )}
                 onClick={onClose}
               >
-                <XMarkIcon className="h-5 w-5" />
+                <XMarkIcon className='h-5 w-5' />
               </button>
             </div>
           )}
         </div>
       </motion.div>
     );
-  }
+  },
 );
 
-Alert.displayName = 'Alert'; 
+Alert.displayName = 'Alert';
