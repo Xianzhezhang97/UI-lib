@@ -13,6 +13,7 @@ export const Digit: React.FC<{
 }> = ({ value, prevValue, animation, duration, delay, fontSize, commaWidth }) => {
   const variants = getVariants(animation, duration, delay);
   const hasChanged = value !== prevValue;
+  
   const direction = hasChanged 
     ? (Number(value.toString()) > Number(prevValue.toString()) ? 'up' : 'down')
     : 'up';
@@ -43,6 +44,7 @@ export const Digit: React.FC<{
       />
     );
   }
+  
 
   return (
     <div 

@@ -28,7 +28,7 @@ export const formatNumber = (
   maxNumberPlaces: number = 0
 ): string => {
   if (typeof value === 'string') return value;
-  if (typeof value !== 'number') return '';
+  if (typeof value !== 'number') return 'NaN';
   const num = Number(value);
 
   switch (format) {

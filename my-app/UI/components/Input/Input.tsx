@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion, HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/utils/cn';
+import { HTMLMotionProps, motion } from 'framer-motion';
+import React from 'react';
 
 export interface InputProps extends Omit<HTMLMotionProps<'input'>, 'children' | 'size' | 'onChange'> {
   label?: string;
@@ -12,9 +12,9 @@ export interface InputProps extends Omit<HTMLMotionProps<'input'>, 'children' | 
   size?: 'sm' | 'md' | 'lg';
   variant?: 'outline' | 'filled' | 'flushed';
   value?: string;
-  onChange?: (value: string) => void;
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
 }
 
 const sizeStyles = {
@@ -64,7 +64,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (!isComposing) {
-        onChange?.(event.target.value);
+        onChange?.(event);
       }
     };
 
@@ -74,7 +74,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const handleCompositionEnd = (event: React.CompositionEvent<HTMLInputElement>) => {
       setIsComposing(false);
-      onChange?.(event.currentTarget.value);
+      // onChange?.(event);  
     };
 
     return (
