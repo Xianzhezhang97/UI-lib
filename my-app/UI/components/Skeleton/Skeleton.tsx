@@ -1,7 +1,8 @@
 import { cn } from '@/utils/cn';
 import React from 'react';
+import './skeleton.css';
 
-type SkeletonVariant = 'text' | 'circular' | 'rectangular';
+type SkeletonVariant = 'text' | 'circular' | 'rectangular' | 'chart' | 'image' | 'card' | 'list' | 'article';
 type SkeletonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -26,6 +27,11 @@ const variantStyles = {
   text: 'rounded',
   circular: 'rounded-full',
   rectangular: 'rounded-none',
+  chart: 'rounded-lg',
+  image: 'rounded-lg',
+  card: 'rounded-lg',
+  list: 'rounded-lg',
+  article: 'rounded-lg',
 };
 
 export const Skeleton: React.FC<SkeletonProps> = ({
@@ -33,7 +39,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   size = 'md',
   isLoaded = false,
   fadeDuration = 0.2,
-  speed = 1,
+  speed = 0.7,
   startColor = 'from-gray-200',
   endColor = 'to-gray-300',
   className,
@@ -44,31 +50,105 @@ export const Skeleton: React.FC<SkeletonProps> = ({
     return <>{children}</>;
   }
 
+  // Extract color values from Tailwind classes
+  const startColorValue = startColor.replace('from-', 'bg-');
+  const endColorValue = endColor.replace('to-', 'bg-');
+
+  const variantClass = `skeleton-${variant}`;
+
   return (
     <div
       className={cn(
-        'relative overflow-hidden',
+        'skeleton-base',
         sizeStyles[size],
         variantStyles[variant],
-        'bg-gradient-to-r',
-        startColor,
-        endColor,
-        'animate-shimmer',
+        startColorValue,
+        variantClass,
         className,
       )}
-      style={{
-        animationDuration: `${speed}s`,
-      }}
       {...props}
     >
-      <div
-        className='absolute inset-0 -translate-x-full animate-shimmer'
+      {/* Animation overlay */}
+      <div 
+        className='skeleton-shimmer'
         style={{
-          background:
-            'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
-          animationDuration: `${speed}s`,
+          animationDuration: `${speed * 1.5}s`
         }}
       />
+    </div>
+  );
+};
+
+// 骨架屏组合
+export const SkeletonGroup = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  return (
+    <div className={cn('space-y-4', className)} {...props}>
+      {children}
+    </div>
+  );
+};
+
+// 骨架屏布局
+export const SkeletonLayout = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  return (
+    <div className={cn('grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4', className)} {...props}>
+      {children}
+    </div>
+  );
+};
+
+// 骨架屏卡片
+export const SkeletonCard = ({
+  title,
+  description,
+  className,
+  ...props
+}: {
+  title?: boolean;
+  description?: boolean;
+  className?: string;
+}) => {
+  return (
+    <div className={cn('skeleton-card', className)} {...props}>
+      {title && <Skeleton variant="text" size="lg" className="w-3/4 mb-2" />}
+      {description && (
+        <>
+          <Skeleton variant="text" size="md" className="w-2/3 mb-2" />
+          <Skeleton variant="text" size="md" className="w-1/2" />
+        </>
+      )}
+    </div>
+  );
+};
+
+// 骨架屏列表项
+export const SkeletonListItem = ({
+  avatar,
+  title,
+  description,
+  className,
+  ...props
+}: {
+  avatar?: boolean;
+  title?: boolean;
+  description?: boolean;
+  className?: string;
+}) => {
+  return (
+    <div className={cn('skeleton-list-item flex items-center space-x-4 p-4', className)} {...props}>
+      {avatar && <Skeleton variant="circular" size="md" className="w-10 h-10" />}
+      <div className="flex-1">
+        {title && <Skeleton variant="text" size="md" className="w-3/4 mb-2" />}
+        {description && <Skeleton variant="text" size="sm" className="w-1/2" />}
+      </div>
     </div>
   );
 };

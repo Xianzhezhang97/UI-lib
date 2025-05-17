@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Skeleton } from './Skeleton';
 
@@ -12,7 +11,7 @@ export default meta;
 // Basic Skeleton Stories
 export const Basic: StoryObj<typeof Skeleton> = {
   render: () => (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       <Skeleton variant="text" size="md" className="w-3/4" />
       <Skeleton variant="text" size="md" className="w-1/2" />
       <Skeleton variant="text" size="md" className="w-2/3" />
@@ -141,3 +140,43 @@ export const ListExample: StoryObj<typeof Skeleton> = {
     </div>
   ),
 }; 
+
+export const UserTableWithAvatars: StoryObj<typeof Skeleton> = {
+  render: () => (
+    <div className="space-y-2 border rounded-lg p-4">
+      <Skeleton variant="text" size="lg" className="w-32" />
+      {[...Array(4)].map((_, i) => (
+        <div key={i} className="flex items-center space-x-4">
+          <Skeleton variant="circular" size="md" className="w-10 h-10" />
+          <Skeleton variant="text" size="md" className="w-1/3" />
+          <Skeleton variant="text" size="sm" className="w-1/4" />
+          <Skeleton variant="text" size="sm" className="w-1/6" />
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const BasicTable: StoryObj<typeof Skeleton> = {
+  render: () => (
+    <div className="space-y-2 border rounded-lg p-4">
+      <Skeleton variant="text" size="lg" className="w-32" />
+      <div className="space-y-1">
+        {[...Array(5)].map((_, rowIndex) => (
+          <div key={rowIndex} className="grid grid-cols-4 gap-4">
+            {[...Array(4)].map((_, colIndex) => (
+              <Skeleton
+                key={colIndex}
+                variant="rectangular"
+                size="sm"
+                className="h-6"
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  ),
+};
+
+

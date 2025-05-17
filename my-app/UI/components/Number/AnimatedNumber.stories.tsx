@@ -1,7 +1,7 @@
 import { useArgs } from '@storybook/preview-api';
 import { Meta, StoryObj } from '@storybook/react';
 import { useEffect, useState } from 'react';
-import { AnimatedNumber } from './components/AnimatedNumber';
+import { AnimatedNumber } from './AnimatedNumber';
 
 const meta: Meta<typeof AnimatedNumber> = {
   title: 'Components/AnimatedNumber',
@@ -9,38 +9,73 @@ const meta: Meta<typeof AnimatedNumber> = {
   parameters: {
     layout: 'centered',
   },
-  argTypes: {
+  tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <div className='flex flex-col gap-8 items-center p-6 w-full max-w-md'>
+        <Story />
+      </div>
+    ),
+  ],
 
+  argTypes: {
     value: {
-      control: { type: 'number'},
-    },
-    startValue: {
-      control: { type: 'number'},
+      control: { type: 'range', min: 0, max: 1000000, step: 1 },
+      // control: { type: 'number', min: 0, max: 1000000, step: 1 },
+      description: 'The final value to animate to.',
     },
     animation: {
       control: { type: 'select' },
       options: ['slide', 'flip', 'fade', 'none'],
+      description: 'The animation type to use.',
     },
     format: {
-      control: { type: 'select' },
+      control: { type: 'radio' },
       options: ['none', 'currency', 'percentage', 'decimal'],
+      description: 'The format type to use.',
     },
     currencyType: {
-      control: { type: 'select' },
+      control: { type: 'radio' },
       options: ['CNY', 'AUD', 'USD', 'EUR', 'JPY', 'GBP', 'HKD', 'TWD'],
       if: { arg: 'format', eq: 'currency' },
+      description: 'The currency type to use.',
+    },
+    numberType: {
+      control: { type: 'radio' },
+      options: [ 'standard', 'scientific', 'engineering' ],
+      if: { arg: 'format', eq: 'none' },
+      description: 'The number type to use.',
     },
     useShortFormat: {
-      control: { type: 'boolean' }
+      control: { type: 'boolean' },
+      description: 'Whether to use short format.',
     },
-    duration: {
-      control: { type: 'range', min: 0.1, max: 10, step: 0.1 },
+    maxNumberPlaces: {
+      control: { type: 'number', min: 1, max: 10, step: 1 },
+      description: 'The maximum number of places to show.',
+      if: { arg: 'useShortFormat', eq: true },
     },
     decimalPlaces: {
-      control: { type: 'number' },
+      control: { type: 'range', min: 0, max: 5, step: 1 },
+      description: 'The number of decimal places to show.',
+      if: { arg: 'useShortFormat', eq: false },
+    },
+
+    duration: {
+      control: { type: 'range', min: 0.1, max: 10, step: 0.1 },
+      description: 'The duration of the animation in seconds.',
     },
     delayPerChar: {
-      control: { type: 'number' },
+      control: { type: 'number', min: 0, max: 0.2, step: 0.01 },
+      description: 'The delay between each character in seconds.',
+    },
+    prefix: {
+      control: { type: 'text' },
+      description: 'The prefix to show before the number.',
+    },
+    suffix: {
+      control: { type: 'text' },
+      description: 'The suffix to show after the number.',
     },
   },
 };
@@ -100,9 +135,7 @@ const InteractiveDemo = (args: any) => {
           {...args}
           className='text-3xl font-bold'
         />
-        
       </div>
-      <input type="range" className="w-[400px]" value={value} onChange={(e) => setValue(Number(e.target.value))} />
     </div>
   );
 };
@@ -126,7 +159,7 @@ export const Interactive: Story = {
     value: 1234,
     animation: 'slide',
     duration: 0.5,
-    format: 'standard',
+    format: 'none',
     currencyType: 'USD',
     useShortFormat: true,
     numberType: 'standard',
@@ -134,20 +167,23 @@ export const Interactive: Story = {
     delayPerChar: 0.05,
     prefix: '',
     suffix: '',
+    currencySymbolSize: '1em',
+    integerPartSize: '1.2em',
+    decimalPartSize: '1em',
+    suffixSize: '1em',
+    maxNumberPlaces: 3,
   },
 };
 
-// 其他示例保持不变...
 export const SlideAnimation: Story = {
   args: {
     value: 1234,
     animation: 'slide',
     duration: 0.5,
-    className: 'text-3xl',
-    currencySymbolSize: '0.8em',
+    currencySymbolSize: '1em',
     integerPartSize: '1.2em',
-    decimalPartSize: '0.8em',
-    suffixSize: '0.8em',
+    decimalPartSize: '1em',
+    suffixSize: '1em',
     useShortFormat: false,
   },
 };
@@ -159,7 +195,6 @@ export const CurrencyFormat: Story = {
     currencyType: 'AUD',
     animation: 'slide',
     duration: 0.5,
-    className: 'text-3xl',
     useShortFormat: true,
     currencySymbolSize: '1em',
     integerPartSize: '1.2em',
@@ -177,11 +212,10 @@ export const DecimalFormat: Story = {
     animation: 'slide',
     duration: 0.5,
     decimalPlaces: 1,
-    className: 'text-3xl',
-    currencySymbolSize: '0.8em',
+    currencySymbolSize: '1em',
     integerPartSize: '1.2em',
-    decimalPartSize: '0.8em',
-    suffixSize: '0.8em',
+    decimalPartSize: '1em',
+    suffixSize: '1em',
   },
 };
 
@@ -194,11 +228,10 @@ export const ShortFormatDecimal: Story = {
     animation: 'slide',
     duration: 0.5,
     decimalPlaces: 1,
-    className: 'text-3xl',
-    currencySymbolSize: '0.8em',
+    currencySymbolSize: '1em',
     integerPartSize: '1.2em',
-    decimalPartSize: '0.8em',
-    suffixSize: '0.8em',
+    decimalPartSize: '1em',
+    suffixSize: '1em',
   },
 };
 
@@ -211,7 +244,6 @@ export const ShortFormat: Story = {
     animation: 'slide',
     duration: 0.5,
     decimalPlaces: 1,
-    className: 'text-3xl',
     currencySymbolSize: '0.8em',
     integerPartSize: '1.2em',
     decimalPartSize: '0.8em',

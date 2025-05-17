@@ -1,44 +1,54 @@
 import { cn } from '@/utils/cn';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
-import { AnimatedNumberProps, AnimationType, NumberFormat, NumberType } from './types';
 
-// 将货币符号、整数部分、小数部分分离
+export type NumberFormat =
+  | 'none'
+  | 'currency'
+  | 'percentage'
+  | 'decimal';
+
+export type NumberType = 
+  | 'standard'    // 标准数字格式
+  | 'scientific'  // 科学计数法
+  | 'engineering';// 工程计数法
+
+export type AnimationType = 'flip' | 'slide' | 'fade' | 'none';
+
+interface AnimatedNumberProps {
+  value: number | string;
+  format?: NumberFormat;
+  animation?: AnimationType;
+  duration?: number;
+  decimalPlaces?: number;
+  prefix?: string;
+  suffix?: string;
+  locale?: string;
+  maxNumberPlaces?: number;
+  delayPerChar?: number;
+  currencyType?: string;
+  useShortFormat?: boolean;
+  numberType?: NumberType;
+  currencySymbolSize?: string;
+  integerPartSize?: string;
+  decimalPartSize?: string;
+  suffixSize?: string;
+  commaWidth?: string;
+}
+
 const parseFormattedNumber = (
   formattedValue: string,
   format: NumberFormat,
   locale: string,
-  currencyType: string,
-  useShortFormat: boolean
-): { currencySymbol: string, integerPart: string, decimalPart: string, suffix: string } => {
-  // 默认值
+  currencyType: string
+): { currencySymbol: string, integerPart: string, decimalPart: string } => {
   let result = {
     currencySymbol: '',
     integerPart: formattedValue,
-    decimalPart: '',
-    suffix: ''
+    decimalPart: ''
   };
 
-  // 处理后缀 (K, M, B)
-  const extractSuffix = (value: string): { mainPart: string, suffix: string } => {
-    const shortSuffixes = ['K', 'M', 'B'];
-    let mainPart = value;
-    let suffix = '';
-    
-    for (const sfx of shortSuffixes) {
-      if (value.endsWith(sfx)) {
-        mainPart = value.slice(0, -1);
-        suffix = sfx;
-        break;
-      }
-    }
-    
-    return { mainPart, suffix };
-  };
-
-  // 处理货币格式
   if (format === 'currency') {
-    // 获取货币符号
     const formatter = new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: currencyType
@@ -46,30 +56,11 @@ const parseFormattedNumber = (
     const parts = formatter.formatToParts(0);
     const currencySymbol = parts.find(part => part.type === 'currency')?.value || '';
     
-    // 检查是否有短格式后缀
-    const { mainPart, suffix } = extractSuffix(formattedValue);
-    result.suffix = suffix;
-    
-    // 分离货币符号
-    const symbolIndex = mainPart.indexOf(currencySymbol);
+    const symbolIndex = formattedValue.indexOf(currencySymbol);
     if (symbolIndex !== -1) {
       result.currencySymbol = currencySymbol;
+      const valueWithoutSymbol = formattedValue.replace(currencySymbol, '').trim();
       
-      // 根据符号位置决定如何分割
-      let valueWithoutSymbol: string;
-      if (symbolIndex === 0) {
-        // 符号在前
-        valueWithoutSymbol = mainPart.substring(currencySymbol.length).trim();
-        // 检查是否有符号后的空格
-        if (mainPart[currencySymbol.length] === ' ') {
-          result.currencySymbol += ' ';
-        }
-      } else {
-        // 符号在后
-        valueWithoutSymbol = mainPart.substring(0, symbolIndex).trim();
-      }
-      
-      // 分离整数和小数部分
       const decimalSeparator = parts.find(part => part.type === 'decimal')?.value || '.';
       const separatorIndex = valueWithoutSymbol.indexOf(decimalSeparator);
       
@@ -79,49 +70,14 @@ const parseFormattedNumber = (
       } else {
         result.integerPart = valueWithoutSymbol;
       }
-    } else {
-      // 处理无法找到符号的情况
-      result.integerPart = mainPart;
-    }
-  } else if (format === 'percentage') {
-    // 处理百分比格式
-    const formatter = new Intl.NumberFormat(locale, { style: 'percent' });
-    const parts = formatter.formatToParts(0);
-    const percentSign = parts.find(part => part.type === 'percentSign')?.value || '%';
-    
-    // 移除百分比符号
-    const percentIndex = formattedValue.indexOf(percentSign);
-    if (percentIndex !== -1) {
-      result.suffix = percentSign;
-      const valueWithoutPercent = formattedValue.substring(0, percentIndex).trim();
-      
-      // 分离整数和小数部分
-      const decimalSeparator = parts.find(part => part.type === 'decimal')?.value || '.';
-      const separatorIndex = valueWithoutPercent.indexOf(decimalSeparator);
-      
-      if (separatorIndex !== -1) {
-        result.integerPart = valueWithoutPercent.substring(0, separatorIndex);
-        result.decimalPart = decimalSeparator + valueWithoutPercent.substring(separatorIndex + 1);
-      } else {
-        result.integerPart = valueWithoutPercent;
-      }
-    } else {
-      result.integerPart = formattedValue;
     }
   } else {
-    // 处理其他格式
-    const { mainPart, suffix } = extractSuffix(formattedValue);
-    result.suffix = suffix;
-    
-    // 处理小数分离
     const decimalSeparator = new Intl.NumberFormat(locale).format(1.1).charAt(1);
-    const separatorIndex = mainPart.indexOf(decimalSeparator);
+    const separatorIndex = formattedValue.indexOf(decimalSeparator);
     
     if (separatorIndex !== -1) {
-      result.integerPart = mainPart.substring(0, separatorIndex);
-      result.decimalPart = decimalSeparator + mainPart.substring(separatorIndex + 1);
-    } else {
-      result.integerPart = mainPart;
+      result.integerPart = formattedValue.substring(0, separatorIndex);
+      result.decimalPart = decimalSeparator + formattedValue.substring(separatorIndex + 1);
     }
   }
 
@@ -130,71 +86,131 @@ const parseFormattedNumber = (
 
 const formatNumber = (
   value: number | string,
-  format: NumberFormat = 'standard',
+  format: NumberFormat = 'none',
   decimalPlaces: number = 0,
   locale: string = 'en-US',
   currencyType: string = 'USD',
   useShortFormat: boolean = false,
-  numberType: NumberType = 'standard'
+  numberType: NumberType = 'standard',
+  maxNumberPlaces: number = 0
 ): string => {
   if (typeof value === 'string') return value;
   if (typeof value !== 'number') return '';
   const num = Number(value);
 
-  // 处理短格式显示
-  const applyShortFormat = ( num: number ): string =>
-  {
-  
-    if (num >= 1e9) return `${(num / 1e9).toFixed(decimalPlaces)}B`;
-    if (num >= 1e6) return `${(num / 1e6).toFixed(decimalPlaces)}M`;
-    if (num >= 1e3) return `${(num / 1e3).toFixed(decimalPlaces)}K`;
-    return num.toFixed(decimalPlaces);
+  const calculateDecimalPlaces = (num: number, isShortFormat: boolean): number => {
+    if (maxNumberPlaces <= 0) return decimalPlaces;
+    
+    const absNum = Math.abs(num);
+    if (absNum === 0) return decimalPlaces;
+    
+    let integerDigits = absNum >= 1 ? Math.floor(Math.log10(absNum)) + 1 : 0;
+    
+    if (isShortFormat) {
+      if (absNum >= 1e3 && absNum < 1e6) integerDigits -= 3;
+      else if (absNum >= 1e6 && absNum < 1e9) integerDigits -= 6;
+      else if (absNum >= 1e9 && absNum < 1e12) integerDigits -= 9;
+      else if (absNum >= 1e12 && absNum < 1e15) integerDigits -= 12;
+      else if (absNum >= 1e15) integerDigits -= 15;
+    }
+    
+    return Math.max(0, maxNumberPlaces - integerDigits);
   };
 
-  // 处理货币的短格式
+  const applyShortFormat = (num: number): string => {
+    const absNum = Math.abs(num);
+    let divisor = 1;
+    let suffix = '';
+    
+    if (absNum >= 1e15) { divisor = 1e15; suffix = 'Q'; }
+    else if (absNum >= 1e12) { divisor = 1e12; suffix = 'T'; }
+    else if (absNum >= 1e9) { divisor = 1e9; suffix = 'B'; }
+    else if (absNum >= 1e6) { divisor = 1e6; suffix = 'M'; }
+    else if (absNum >= 1e3) { divisor = 1e3; suffix = 'K'; }
+
+    const scaledNum = num / divisor;
+    const actualDecimalPlaces = calculateDecimalPlaces(scaledNum, true);
+    
+    let formatted = scaledNum.toFixed(actualDecimalPlaces);
+    if (actualDecimalPlaces > 0) {
+      formatted = formatted.replace(/\.?0+$/, '');
+      if (formatted.endsWith('.')) formatted = formatted.slice(0, -1);
+    }
+    
+    return `${formatted}${suffix}`;
+  };
+
   const applyCurrencyShortFormat = (num: number): string => {
+    const absNum = Math.abs(num);
+    let divisor = 1;
+    let suffix = '';
+    
+    if (absNum >= 1e15) { divisor = 1e15; suffix = 'Q'; }
+    else if (absNum >= 1e12) { divisor = 1e12; suffix = 'T'; }
+    else if (absNum >= 1e9) { divisor = 1e9; suffix = 'B'; }
+    else if (absNum >= 1e6) { divisor = 1e6; suffix = 'M'; }
+    else if (absNum >= 1e3) { divisor = 1e3; suffix = 'K'; }
+
+    const scaledNum = num / divisor;
+    const actualDecimalPlaces = calculateDecimalPlaces(scaledNum, true);
+    
     const formatter = new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: currencyType,
-      minimumFractionDigits: decimalPlaces,
-      maximumFractionDigits: decimalPlaces,
     });
+    const symbol = formatter.formatToParts(0).find(part => part.type === 'currency')?.value || '';
     
-    const parts = formatter.formatToParts(0);
-    const symbol = parts.find(part => part.type === 'currency')?.value || '';
-    
-    // 获取数字并应用短格式
-    let shortNumStr;
-    if (num >= 1e9) shortNumStr = `${(num / 1e9).toFixed(decimalPlaces)}B`;
-    else if (num >= 1e6) shortNumStr = `${(num / 1e6).toFixed(decimalPlaces)}M`;
-    else if (num >= 1e3) shortNumStr = `${(num / 1e3).toFixed(decimalPlaces)}K`;
-    else shortNumStr = num.toFixed(decimalPlaces);
-    
-    // 根据货币符号位置决定返回格式
-    const currencyPosition = parts.findIndex(part => part.type === 'currency');
-    const literalAfterCurrency = parts.find((part, index) => 
-      index > currencyPosition && part.type === 'literal'
-    )?.value || '';
-    
-    // 如果货币符号在前面
-    if (currencyPosition === 0) {
-      return `${symbol}${literalAfterCurrency}${shortNumStr}`;
-    } else {
-      // 货币符号在后面
-      return `${shortNumStr}${symbol}`;
+    let formatted = scaledNum.toFixed(actualDecimalPlaces);
+    if (actualDecimalPlaces > 0) {
+      formatted = formatted.replace(/\.?0+$/, '');
+      if (formatted.endsWith('.')) formatted = formatted.slice(0, -1);
     }
+    
+    return divisor === 1 
+      ? formatter.format(num)
+      : `${symbol}${formatted}${suffix}`;
   };
 
-  // 处理数字类型格式
+  const formatWithSignificantDigits = (num: number, type: 'scientific' | 'engineering'): string => {
+    let significantDigits = decimalPlaces + 1;
+    if (maxNumberPlaces > 0) {
+      significantDigits = Math.min(maxNumberPlaces, 21);
+    }
+    
+    let formatted = num.toExponential(significantDigits - 1);
+    
+    if (type === 'engineering') {
+      const match = formatted.match(/^(.*?)e([+-]?\d+)$/);
+      if (match) {
+        let coefficient = parseFloat(match[1]);
+        let exponent = parseInt(match[2], 10);
+        
+        const remainder = exponent % 3;
+        if (remainder !== 0) {
+          exponent -= remainder;
+          coefficient *= Math.pow(10, remainder);
+          
+          const newSignificantDigits = Math.max(0, significantDigits - Math.floor(Math.log10(Math.abs(coefficient))) - 1);
+          coefficient = parseFloat(coefficient.toFixed(newSignificantDigits));
+        }
+        
+        formatted = `${coefficient}e${exponent >= 0 ? '+' : ''}${exponent}`;
+      }
+      
+      return formatted.replace(/e([+-]?\d+)/, '×10<sup>$1</sup>');
+    }
+    
+    return formatted;
+  };
+
   const formatWithType = (num: number): string => {
     if (useShortFormat) return applyShortFormat(num);
 
     switch(numberType) {
       case 'scientific':
-        return num.toExponential(decimalPlaces);
+        return formatWithSignificantDigits(num, 'scientific');
       case 'engineering':
-        return num.toExponential(decimalPlaces)
-          .replace(/e([+-]?\d+)/, '×10<sup>$1</sup>');
+        return formatWithSignificantDigits(num, 'engineering');
       default:
         return new Intl.NumberFormat(locale, {
           minimumFractionDigits: decimalPlaces,
@@ -203,29 +219,26 @@ const formatNumber = (
     }
   };
 
-  // 处理特殊格式
   switch (format) {
     case 'currency':
-      if (useShortFormat) {
-        return applyCurrencyShortFormat(value);
-      } else {
-        return new Intl.NumberFormat(locale, {
-          style: 'currency',
-          currency: currencyType,
-          minimumFractionDigits: decimalPlaces,
-          maximumFractionDigits: decimalPlaces,
-        }).format(value);
-      }
+      return useShortFormat 
+        ? applyCurrencyShortFormat(num)
+        : new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency: currencyType,
+            minimumFractionDigits: decimalPlaces,
+            maximumFractionDigits: decimalPlaces,
+          }).format(num);
     case 'percentage':
       return new Intl.NumberFormat(locale, {
         style: 'percent',
         minimumFractionDigits: decimalPlaces,
         maximumFractionDigits: decimalPlaces,
-      }).format(value);
+      }).format(num);
     case 'decimal':
-      return formatWithType(value);
-    default: // standard
-      return formatWithType(value);
+      return formatWithType(num);
+    default:
+      return formatWithType(num);
   }
 };
 
@@ -297,43 +310,54 @@ const Digit: React.FC<{
   duration: number;
   delay: number;
   fontSize?: string;
-  isSpecialChar?: boolean;
-  isSymbol?: boolean;
-}> = ({ value, prevValue, animation, duration, delay, fontSize, isSpecialChar, isSymbol }) => {
+  commaWidth?: string;
+}> = ({ value, prevValue, animation, duration, delay, fontSize, commaWidth }) => {
   const variants = getVariants(animation);
   const hasChanged = value !== prevValue;
   const direction = hasChanged 
-    ? (isNaN(Number(value)) || isNaN(Number(prevValue)) 
-        ? 'up' // 非数字字符使用默认方向
-        : Number(value) > Number(prevValue) ? 'up' : 'down')
+    ? (Number(value.toString()) > Number(prevValue.toString()) ? 'up' : 'down')
     : 'up';
 
   const style = fontSize ? { fontSize } : {};
   
-  // 为特殊字符使用更紧凑的宽度（如小数点、逗号）
-  let widthClass = isSpecialChar ? 'w-[0.2em]' : 'w-[0.6em]';
-  // 为后缀字符 (K/M/B/%) 提供足够宽度
-  if (value === 'K' || value === 'M' || value === 'B' || value === '%') {
-    widthClass = 'w-[0.8em]';
-  }
-  // 为货币符号提供额外的右边距
-  const marginClass = isSymbol ? 'mr-1' : '';
+  const isComma = value === ',';
+  const isDecimalPoint = value === '.';
+  
+  const separatorStyle = isComma ? { 
+    width: commaWidth || '0.4em',
+    minWidth: commaWidth || '0.4em',
+    margin: '0 -0.05em' 
+  } : isDecimalPoint ? {
+    width: '0.3em',
+    minWidth: '0.3em',
+    margin: '0 -0.1em'
+  } : {};
 
   if (animation === 'none') {
     return (
       <div 
-        className={`relative inline-block ${widthClass} ${marginClass} h-[1em] flex items-center justify-center font-medium`}
-        style={style}
-      >
-        {value}
-      </div>
+        className={`relative inline-flex items-center justify-center font-medium ${
+          isComma || isDecimalPoint ? 'text-gray-500' : ''
+        }`}
+        style={{ ...style, ...separatorStyle }}
+        dangerouslySetInnerHTML={{ __html: value }}
+      />
     );
   }
 
   return (
     <div 
-      className={`relative inline-block overflow-hidden ${widthClass} ${marginClass} h-[1em]`}
-      style={style}
+      className="relative inline-flex overflow-hidden items-center justify-center"
+      style={{ 
+        width: isComma ? (commaWidth || '0.4em') : 
+               isDecimalPoint ? '0.3em' : '0.8em',
+        minWidth: isComma ? (commaWidth || '0.4em') : 
+                  isDecimalPoint ? '0.3em' : '0.8em',
+        height: '1em',
+        margin: isComma ? '0 -0.05em' : 
+                isDecimalPoint ? '0 -0.1em' : '0',
+        ...style
+      }}
     >
       <AnimatePresence mode="wait">
         {hasChanged ? (
@@ -352,7 +376,9 @@ const Digit: React.FC<{
                 stiffness: 300,
                 damping: 20
               }}
-              className="absolute inset-0 flex items-center justify-center font-medium"
+              className={`absolute inset-0 flex items-center justify-center font-medium ${
+                isComma || isDecimalPoint ? 'text-gray-500' : ''
+              }`}
               dangerouslySetInnerHTML={{ __html: prevValue }}
             />
             <motion.div
@@ -369,13 +395,17 @@ const Digit: React.FC<{
                 stiffness: 300,
                 damping: 20
               }}
-              className="absolute inset-0 flex items-center justify-center font-medium"
+              className={`absolute inset-0 flex items-center justify-center font-medium ${
+                isComma || isDecimalPoint ? 'text-gray-500' : ''
+              }`}
               dangerouslySetInnerHTML={{ __html: value }}
             />
           </>
         ) : (
           <div 
-            className="absolute inset-0 flex items-center justify-center font-medium"
+            className={`absolute inset-0 flex items-center justify-center font-medium ${
+              isComma || isDecimalPoint ? 'text-gray-500' : ''
+            }`}
             dangerouslySetInnerHTML={{ __html: value }}
           />
         )}
@@ -386,54 +416,47 @@ const Digit: React.FC<{
 
 export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
   value,
-  startValue = 0,
-  format = 'standard',
+  format = 'none',
   animation = 'slide',
   duration = 0.5,
-  className,
-  style,
   decimalPlaces = 0,
   prefix = '',
   suffix = '',
   locale = 'en-US',
+  maxNumberPlaces = 0,
   delayPerChar = 0.05,
   currencyType = 'USD',
   useShortFormat = false,
   numberType = 'standard',
-  // 新增的尺寸控制属性
   currencySymbolSize,
   integerPartSize,
   decimalPartSize,
-  suffixSize
+  suffixSize,
+  commaWidth = '0.4em'
 }) => {
-  const [currentValue, setCurrentValue] = useState(startValue);
   const [formattedParts, setFormattedParts] = useState<{
     currencySymbol: string;
     integerPart: string;
     decimalPart: string;
-    suffix: string;
     fullText: string;
   }>({
     currencySymbol: '',
     integerPart: '',
     decimalPart: '',
-    suffix: '',
     fullText: ''
   });
   const [prevFormattedParts, setPrevFormattedParts] = useState<{
     currencySymbol: string;
     integerPart: string;
     decimalPart: string;
-    suffix: string;
     fullText: string;
   }>({
     currencySymbol: '',
     integerPart: '',
     decimalPart: '',
-    suffix: '',
     fullText: ''
   });
-  const prevValueRef = useRef(startValue);
+  const prevValueRef = useRef(0);
 
   useEffect(() => {
     const numValue = typeof value === 'number' ? value : parseFloat(value.toString());
@@ -446,21 +469,20 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
         locale,
         currencyType,
         useShortFormat,
-        numberType
+        numberType,
+        maxNumberPlaces
       );
       
-      // 解析并分离格式化后的数字
-      const parsedParts = parseFormattedNumber(formatted, format, locale, currencyType, useShortFormat);
+      const parsedParts = parseFormattedNumber(formatted, format, locale, currencyType);
       
       setFormattedParts({
         ...parsedParts,
         fullText: formatted
       });
       
-      prevValueRef.current = currentValue;
-      setCurrentValue(numValue);
+      prevValueRef.current = numValue;
     }
-  }, [value, format, decimalPlaces, locale, currencyType, useShortFormat, numberType]);
+  }, [value, format, decimalPlaces, locale, currencyType, useShortFormat, numberType, maxNumberPlaces]);
 
   const calculateDelay = (index: number, totalLength: number, changed: boolean) => {
     if (!changed || animation === 'none') return 0;
@@ -468,7 +490,7 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
     return reverseIndex * delayPerChar;
   };
 
-  const renderPart = (text: string, prevText: string, partFontSize?: string, isSymbol: boolean = false) => {
+  const renderPart = (text: string, prevText: string, partFontSize?: string) => {
     const chars = text.split('');
     const prevChars = prevText ? prevText.split('') : Array(chars.length).fill(' ');
     
@@ -476,8 +498,6 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
       const prevChar = prevChars[index] || ' ';
       const changed = prevChar !== char && prevChar !== ' ';
       const delay = calculateDelay(index, chars.length, changed);
-      // 检查是否为特殊字符（小数点、逗号等）
-      const isSpecialChar = char === '.' || char === ',' || char === ' ' || char === "'" || char === ' ';
       
       return (
         <Digit
@@ -488,8 +508,7 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
           duration={duration}
           delay={delay}
           fontSize={partFontSize}
-          isSpecialChar={isSpecialChar}
-          isSymbol={isSymbol && index === chars.length - 1} // 只对符号的最后一个字符应用margin
+          commaWidth={commaWidth}
         />
       );
     });
@@ -499,26 +518,21 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
     <div
       className={cn(
         'inline-flex items-center text-base font-medium tabular-nums',
-        className
       )}
-      style={style}
     >
       {prefix && <span className="mr-1" dangerouslySetInnerHTML={{ __html: prefix }} />}
       
       <div className="flex overflow-hidden items-baseline">
-        {/* 货币符号部分 */}
         {formattedParts.currencySymbol && (
           <div className="flex" style={currencySymbolSize ? { fontSize: currencySymbolSize } : {}}>
             {renderPart(
               formattedParts.currencySymbol, 
               prevFormattedParts.currencySymbol, 
-              currencySymbolSize,
-              true // 标记为符号，应用margin
+              currencySymbolSize
             )}
           </div>
         )}
         
-        {/* 整数部分 */}
         <div className="flex" style={integerPartSize ? { fontSize: integerPartSize } : {}}>
           {renderPart(
             formattedParts.integerPart, 
@@ -527,23 +541,11 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
           )}
         </div>
         
-        {/* 小数部分 */}
         {formattedParts.decimalPart && (
           <div className="flex" style={decimalPartSize ? { fontSize: decimalPartSize } : {}}>
             {renderPart(
               formattedParts.decimalPart, 
               prevFormattedParts.decimalPart,
-              decimalPartSize
-            )}
-          </div>
-        )}
-        
-        {/* 后缀 (K/M/B/%) */}
-        {formattedParts.suffix && (
-          <div className="flex" style={decimalPartSize ? { fontSize: decimalPartSize } : {}}>
-            {renderPart(
-              formattedParts.suffix,
-              prevFormattedParts.suffix,
               decimalPartSize
             )}
           </div>

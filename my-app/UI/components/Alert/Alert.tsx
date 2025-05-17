@@ -1,12 +1,16 @@
 import { cn } from '@/utils/cn';
 import
   {
-    XMarkIcon
+    CheckCircleIcon,
+    ExclamationCircleIcon,
+    ExclamationTriangleIcon,
+    InformationCircleIcon,
+    XMarkIcon,
   } from '@heroicons/react/24/outline';
-// import Icon from '@UI/Components/Icon/Icon';
-import { Typography } from '@UI/Components/Typography/Typography';
 import { HTMLMotionProps, motion } from 'framer-motion';
 import React from 'react';
+import { Card } from '../Card/Card';
+import { Typography } from '../Typography/Typography';
 
 export interface AlertProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   title?: string;
@@ -41,10 +45,10 @@ const variantStyles = {
 };
 
 const defaultIcons = {
-  info: <i name="info" className='h-5 w-5' />,
-  success: <i name="check-circle" className='h-5 w-5' />,
-  warning: <i name="exclamation-triangle" className='h-5 w-5' />,
-  error: <i name="exclamation-circle" className='h-5 w-5' />,
+  info: <InformationCircleIcon className='h-6 w-6' />,
+  success: <CheckCircleIcon className='h-6 w-6' />,
+  warning: <ExclamationTriangleIcon className='h-6 w-6' />,
+  error: <ExclamationCircleIcon className='h-6 w-6' />,
 };
 
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
@@ -64,17 +68,17 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
     return (
       <motion.div
         ref={ref}
-        className={cn(
-          'rounded-lg p-4',
-          variantStyles[variant].container,
-          className,
-        )}
         role='alert'
         {...props}
       >
-        <div className='flex'>
+        <Card
+          size='sm'
+          className={ cn( variantStyles[ variant ].container,
+            'flex  gap-4',
+          title && 'items-center',
+          description && 'items-start',) }>
           <div className='flex-shrink-0'>{icon || defaultIcons[variant]}</div>
-          <div className='ml-3 flex-1'>
+          <div className='flex-1 items-start justify-start'>
             {title && (
               <Typography
                 variant='h6'
@@ -88,7 +92,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
             {description && (
               <Typography
                 variant='p'
-                className={cn(variantStyles[variant].container)}
+                
                 color='default'
               >
                 {description}
@@ -109,7 +113,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
               </button>
             </div>
           )}
-        </div>
+        </Card>
       </motion.div>
     );
   },

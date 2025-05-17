@@ -1,7 +1,7 @@
-import React from 'react';
-import { motion, HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { HTMLMotionProps, motion } from 'framer-motion';
+import React from 'react';
 
 export interface AccordionProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   title: string;
@@ -37,28 +37,29 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(
       <motion.div
         ref={ref}
         className={cn(
-          'w-full rounded-lg border border-gray-200',
-          disabled && 'opacity-50',
+          'w-full rounded-lg border border-gray-200 cursor-pointer group ',
+          disabled && 'opacity-50 cursor-not-allowed',
           className
         )}
-        {...props}
+        { ...props }
+         onClick={toggleOpen}
+          
       >
-        <button
+        <div
           className={cn(
-            'flex w-full items-center justify-between px-4 py-3 text-left',
-            disabled && 'cursor-not-allowed'
-          )}
-          onClick={toggleOpen}
-          disabled={disabled}
+            'flex w-full items-center justify-between px-4 py-3 text-left group'
+          ) }
+          
         >
           <span className="text-sm font-medium text-gray-900">{title}</span>
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
-            transition={{ duration: 0.2,ease:[0,0.4,0.25,1] }}
+            transition={ { duration: 0.7, ease: [ 0.22, 1, 0.36, 1 ] } }
+            className='group-hover:rotate-180'
           >
             {icon || <ChevronDownIcon className="h-5 w-5 text-gray-500" />}
           </motion.div>
-        </button>
+        </div>
         <motion.div
           ref={contentRef}
           initial={false}
@@ -66,8 +67,8 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(
             height: isOpen ? contentRef.current?.scrollHeight : 0,
             opacity: isOpen ? 1 : 0,
           }}
-          transition={{ duration: 0.2,ease:[0.25,0.1,0.25,1] }}
-          className="overflow-hidden"
+          transition={ { duration: 0.7, ease: [ 0.22, 1, 0.36, 1 ] } }
+          className="overflow-hidden flex flex-col"
         >
           <div className="px-4 pb-3 text-sm text-gray-500">{children}</div>
         </motion.div>

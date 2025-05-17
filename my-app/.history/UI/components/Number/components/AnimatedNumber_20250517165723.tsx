@@ -22,7 +22,7 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
   locale = 'en-US',
   delayPerChar = 0.05,
   currencyType = 'USD',
-  useShortFormat = false,
+  useShortFormat = 2,
   numberType = 'standard',
   currencySymbolSize,
   integerPartSize,
@@ -51,18 +51,27 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
     const numValue = typeof value === 'number' ? value : parseFloat(value.toString());
     if (!isNaN(numValue)) {
       setPrevFormattedParts(formattedParts);
+      
+      // Determine how to handle useShortFormat based on its type
+      // If it's a boolean false, don't use short format
+      // If it's a boolean true, use short format with default maxDigits (3)
+      // If it's a number, use that as the maxDigits for short format
+      const shouldUseShortFormat = useShortFormat !== false;
+      const shortFormatValue = typeof useShortFormat === 'number' ? useShortFormat : shouldUseShortFormat ? 3 : false;
+      
       const formatted = formatNumber(
         numValue, 
         format, 
         decimalPlaces, 
         locale,
         currencyType,
-        useShortFormat,
+        shortFormatValue,
         numberType
       );
       
       // 解析并分离格式化后的数字
-      const parsedParts = parseFormattedNumber(formatted, format, locale, currencyType, useShortFormat);
+      // Handle boolean conversion for parsing function that expects boolean
+      const parsedParts = parseFormattedNumber(formatted, format, locale, currencyType, shouldUseShortFormat);
       
       setFormattedParts({
         ...parsedParts,

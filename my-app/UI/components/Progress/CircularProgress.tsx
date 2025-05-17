@@ -10,7 +10,9 @@ type CircularProgressColor =
   | 'success'
   | 'warning'
   | 'danger'
-  | 'info';
+  | 'info'
+  | 'black'
+  | 'white';
 
 interface CircularProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   value: number;
@@ -21,14 +23,15 @@ interface CircularProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   showValue?: boolean;
   isIndeterminate?: boolean;
   thickness?: number;
+  duration?: number;
 }
 
 const sizeStyles = {
   xs: 'w-8 h-8',
-  sm: 'w-12 h-12',
-  md: 'w-32 h-32',
-  lg: 'w-40 h-40',
-  xl: 'w-48 h-48',
+  sm: 'w-8 h-8 md:w-12 md:h-12',
+  md: 'w-12 h-12',
+  lg: 'w-16 h-16',
+  xl: 'w-20 h-20',
 };
 
 const textSizes = {
@@ -45,6 +48,8 @@ const colorStyles = {
   warning: 'stroke-warning-500',
   danger: 'stroke-danger-500',
   info: 'stroke-blue-500',
+  black: 'stroke-black',
+  white: 'stroke-white',
 };
 
 const gradientStyles = {
@@ -53,6 +58,8 @@ const gradientStyles = {
   warning: 'stroke-[url(#gradient-warning)]',
   danger: 'stroke-[url(#gradient-danger)]',
   info: 'stroke-[url(#gradient-info)]',
+  black: 'stroke-[url(#gradient-black)]',
+  white: 'stroke-[url(#gradient-white)]',
 };
 
 export const CircularProgress = React.memo<CircularProgressProps>(
@@ -65,6 +72,7 @@ export const CircularProgress = React.memo<CircularProgressProps>(
     showValue = false,
     isIndeterminate = false,
     thickness = 12,
+    duration = 3,
     className,
     ...props
   }) => {
@@ -209,7 +217,7 @@ export const CircularProgress = React.memo<CircularProgressProps>(
                 amount: 0.25,
               }}
               transition={{
-                duration: isIndeterminate ? 1 : 3,
+                duration: isIndeterminate ? 1 : duration,
                 ease: [0.22, 1, 0.36, 1],
                 repeat: isIndeterminate ? Infinity : 0,
               }}
@@ -230,7 +238,7 @@ export const CircularProgress = React.memo<CircularProgressProps>(
               )}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
               {Math.round(percentage)}%
             </motion.span>

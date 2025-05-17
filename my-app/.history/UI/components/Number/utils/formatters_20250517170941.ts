@@ -128,107 +128,53 @@ export const parseFormattedNumber = (
 };
 
 /**
- * 格式化数字为不同的显示格式
+ * Format a number to a specified precision of significant digits
+ * @param value The number to format
+ * @param precision The maximum number of significant digits to show
+ * @returns The formatted number as a string
+ */
+export const formatToSignificantDigits = (value: number, precision: number): string => {
+  // Convert to precision significant digits
+  const formatted = value.toPrecision(precision);
+  
+  // Remove trailing zeros and decimal point if needed
+  return formatted.replace(/\.?0+$/, '');
+};
+
+/**
+ * Format a number using shorthand notation (K, M, B, etc.)
+ * @param value The number to format
+ * @returns The formatted number as a string with appropriate suffix
+ */
+export const formatShort = (value: number): string => {
+  const abs = Math.abs(value);
+  
+  if (abs >= 1_000_000_000) {
+    return `${(value / 1_000_000_000).toFixed(1)}B`;
+  } else if (abs >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(1)}M`;
+  } else if (abs >= 1_000) {
+    return `${(value / 1_000).toFixed(1)}K`;
+  }
+  
+  return value.toString();
+};
+
+/**
+ * Format a number based on configuration options
+ * @param value The number to format
+ * @param useShortFormat Whether to use shorthand notation (K, M, B)
+ * @param maxSignificantDigits Maximum number of significant digits to show (only used if useShortFormat is false)
+ * @returns The formatted number as a string
  */
 export const formatNumber = (
-  value: number | string,
-  format: NumberFormat = 'standard',
-  decimalPlaces: number = 0,
-  locale: string = 'en-US',
-  currencyType: string = 'USD',
-  useShortFormat: boolean = false,
-  numberType: NumberType = 'standard'
+  value: number, 
+  useShortFormat: boolean, 
+  maxSignificantDigits: number = 3
 ): string => {
-  const num = typeof value === 'string' ? parseFloat(value) : value;
-  
-  // 处理可能的NaN
-  if (isNaN(num)) return '0';
-  
-  // 处理短格式显示
-  const applyShortFormat = (num: number): string => {
-    if (num >= 1e9) return (num / 1e9).toFixed(decimalPlaces) + 'B';
-    if (num >= 1e6) return (num / 1e6).toFixed(decimalPlaces) + 'M';
-    if (num >= 1e3) return (num / 1e3).toFixed(decimalPlaces) + 'K';
-    return num.toFixed(decimalPlaces);
-  };
-  
-  // 处理货币的短格式
-  const applyCurrencyShortFormat = (num: number): string => {
-    const formatter = new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: currencyType,
-      minimumFractionDigits: decimalPlaces,
-      maximumFractionDigits: decimalPlaces,
-    });
-    
-    const parts = formatter.formatToParts(0);
-    const symbol = parts.find(part => part.type === 'currency')?.value || '';
-    
-    // 获取数字并应用短格式
-    let shortNumStr;
-    if (num >= 1e9) shortNumStr = `${(num / 1e9).toFixed(decimalPlaces)}B`;
-    else if (num >= 1e6) shortNumStr = `${(num / 1e6).toFixed(decimalPlaces)}M`;
-    else if (num >= 1e3) shortNumStr = `${(num / 1e3).toFixed(decimalPlaces)}K`;
-    else shortNumStr = num.toFixed(decimalPlaces);
-    
-    // 根据货币符号位置决定返回格式
-    const currencyPosition = parts.findIndex(part => part.type === 'currency');
-    const literalAfterCurrency = parts.find((part, index) => 
-      index > currencyPosition && part.type === 'literal'
-    )?.value || '';
-    
-    // 如果货币符号在前面
-    if (currencyPosition === 0) {
-      return `${symbol}${literalAfterCurrency}${shortNumStr}`;
-    } else {
-      // 货币符号在后面
-      return `${shortNumStr}${symbol}`;
-    }
-  };
-
-  // 处理数字类型格式
-  const formatWithType = (num: number): string => {
-    if (numberType === 'scientific') {
-      return num.toExponential(decimalPlaces);
-    } else if (numberType === 'engineering') {
-      // 工程计数法 (指数为3的倍数)
-      const exp = Math.floor(Math.log10(Math.abs(num)));
-      const engExp = Math.floor(exp / 3) * 3;
-      const mantissa = num / Math.pow(10, engExp);
-      
-      return mantissa.toFixed(decimalPlaces) + 'e' + engExp;
-    } else {
-      // 标准格式
-      return useShortFormat
-        ? applyShortFormat(num)
-        : new Intl.NumberFormat(locale, {
-            minimumFractionDigits: decimalPlaces,
-            maximumFractionDigits: decimalPlaces,
-          }).format(num);
-    }
-  };
-  
-  // 处理特殊格式
-  switch (format) {
-    case 'currency':
-      if (useShortFormat) {
-        return applyCurrencyShortFormat(num);
-      } else {
-        return new Intl.NumberFormat(locale, {
-          style: 'currency',
-          currency: currencyType,
-          minimumFractionDigits: decimalPlaces,
-          maximumFractionDigits: decimalPlaces,
-        }).format(num);
-      }
-    case 'percentage':
-      return new Intl.NumberFormat(locale, {
-        style: 'percent',
-        minimumFractionDigits: decimalPlaces,
-      }).format(num);
-    case 'decimal':
-      return formatWithType(num);
-    default: // standard
-      return formatWithType(num);
+  if (useShortFormat) {
+    return formatShort(value);
   }
+  
+  return formatToSignificantDigits(value, maxSignificantDigits);
 };

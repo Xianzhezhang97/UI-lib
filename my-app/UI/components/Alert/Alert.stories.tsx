@@ -71,10 +71,10 @@ export const WithCustomIcon: Story = {
     title: 'Notification',
     description: 'You have a new notification.',
     icon: (
-      <Icon
-        name='bell'
-        size='xl'
-        className='text-blue-500'
+      <i
+        // name='bell'
+        // size='xl'
+        className='text-blue-500 h-5 w-5'
       />
     ),
   },

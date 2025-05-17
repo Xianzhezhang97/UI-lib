@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion, HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/utils/cn';
+import { HTMLMotionProps, motion } from 'framer-motion';
+import React from 'react';
 
 export interface AvatarProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   src?: string;
@@ -15,28 +15,28 @@ export interface AvatarProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
 
 const sizeStyles = {
   sm: {
-    container: 'h-8 w-8',
+    container: 'h-8 w-8 md:h-12 md:w-12',
     text: 'text-xs',
   },
   md: {
-    container: 'h-10 w-10',
+    container: 'h-8 w-8 md:h-14 md:w-14 lg:h-16 lg:w-16',
     text: 'text-sm',
   },
   lg: {
-    container: 'h-12 w-12',
+    container: 'h-10 w-10 md:h-16 md:w-16 lg:h-20 lg:w-20',
     text: 'text-base',
   },
   xl: {
-    container: 'h-16 w-16',
+    container: 'h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 xl:h-24 xl:w-24',
     text: 'text-lg',
   },
 };
 
 const statusStyles = {
-  online: 'bg-green-500',
-  offline: 'bg-gray-500',
-  away: 'bg-yellow-500',
-  busy: 'bg-red-500',
+  online: 'bg-gradient-to-br from-green-500 to-green-300',
+  offline: 'bg-gradient-to-br from-gray-500 to-gray-300',
+  away: 'bg-gradient-to-br from-yellow-500 to-yellow-300',
+  busy: 'bg-gradient-to-br from-red-500 to-red-300',
 };
 
 export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
@@ -104,7 +104,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
         {status && (
           <span
             className={cn(
-              'absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-white',
+              'absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white',
               statusStyles[status]
             )}
           />

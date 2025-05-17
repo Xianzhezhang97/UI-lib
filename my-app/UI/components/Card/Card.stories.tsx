@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '../Button/Button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from './Card';
+import
+  {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+  } from './Card';
 
 const meta = {
   title: 'Components/Card',
@@ -15,7 +16,7 @@ const meta = {
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
   argTypes: {
-    variant: { control: 'select', options: ['elevated', 'outlined', 'filled'] },
+    variant: { control: 'select', options: ['primary', 'secondary', 'tertiary'] },
     size: { control: 'select', options: ['sm', 'md', 'lg', 'xl'] },
   },
 } satisfies Meta<typeof Card>;
@@ -49,23 +50,23 @@ export const Default: Story = {
   },
 };
 
-export const Elevated: Story = {
+export const Primary: Story = {
   args: {
-    variant: 'elevated',
+    variant: 'primary',
     children: DefaultCardContent,
   },
 };
 
-export const Outlined: Story = {
+export const Secondary: Story = {
   args: {
-    variant: 'outlined',
+    variant: 'secondary',
     children: DefaultCardContent,
   },
 };
 
-export const Filled: Story = {
+export const Tertiary: Story = {
   args: {
-    variant: 'filled',
+    variant: 'tertiary',
     children: DefaultCardContent,
   },
 };
@@ -73,6 +74,7 @@ export const Filled: Story = {
 export const Smallsize: Story = {
   args: {
     size: 'sm',
+    variant: 'primary',
     children: DefaultCardContent,
   },
 };
@@ -80,6 +82,7 @@ export const Smallsize: Story = {
 export const Largesize: Story = {
   args: {
     size: 'lg',
+    variant: 'primary',
     children: DefaultCardContent,
   },
 };
@@ -87,6 +90,8 @@ export const Largesize: Story = {
 export const WithImage: Story = {
   args: {
     size: 'md',
+    variant: 'primary',
+
     children: (
       <>
         <img

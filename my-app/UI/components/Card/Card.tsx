@@ -3,15 +3,15 @@ import { HTMLMotionProps, motion } from 'framer-motion';
 import React from 'react';
 
 export interface CardProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
-  variant?: 'elevated' | 'outlined' | 'filled';
+  variant?: 'primary' | 'secondary' | 'tertiary';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   children?: React.ReactNode;
 }
 
 const variantStyles = {
-  elevated: 'bg-white shadow-lg',
-  outlined: 'bg-white border border-gray-200',
-  filled: 'bg-gray-100',
+  primary: 'bg-white shadow-lg',
+  secondary: 'bg-white border border-gray-200',
+  tertiary: 'bg-gray-100',
 };
 
 const sizeStyles = {
@@ -23,7 +23,7 @@ const sizeStyles = {
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   (
-    { className, variant = 'elevated', size = 'md', children, ...props },
+    { className, variant = 'primary', size = 'md', children, ...props },
     ref,
   ) => {
     return (
