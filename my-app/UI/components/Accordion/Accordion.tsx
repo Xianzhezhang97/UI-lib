@@ -53,9 +53,9 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(
         >
           <span className="text-sm font-medium text-gray-900">{title}</span>
           <motion.div
-            animate={{ rotate: isOpen ? 180 : 0 }}
+            animate={{ rotate: isOpen ? '180deg' : '0deg' }}
             transition={ { duration: 0.7, ease: [ 0.22, 1, 0.36, 1 ] } }
-            className='group-hover:rotate-180'
+            className='group-hover:bg-gray-100 rounded-full p-2 transform -translate-x-1/2 '
           >
             {icon || <ChevronDownIcon className="h-5 w-5 text-gray-500" />}
           </motion.div>
@@ -64,7 +64,7 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(
           ref={contentRef}
           initial={false}
           animate={{
-            height: isOpen ? contentRef.current?.scrollHeight : 0,
+            height: isOpen ? `${contentRef.current?.scrollHeight}px` : '0px',
             opacity: isOpen ? 1 : 0,
           }}
           transition={ { duration: 0.7, ease: [ 0.22, 1, 0.36, 1 ] } }
