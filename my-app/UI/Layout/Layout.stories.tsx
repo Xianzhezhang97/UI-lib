@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import React, { useState } from 'react';
 import { Container } from './Container';
 import { Grid } from './Grid';
-import { Stack } from './Stack';
 import { Split } from './Split';
+import { Stack } from './Stack';
 
 const meta: Meta = {
   title: 'Layout/Layout',
@@ -108,7 +108,14 @@ export const GridColumns: StoryObj<typeof Grid> = {
             ))}
           </Grid>
         </CopyButton>
-      ))}
+      ) ) }
+      <Grid responsive minWidth={220} gap="md">
+  <div className="bg-white p-4 rounded shadow">卡片1</div>
+  <div className="bg-white p-4 rounded shadow">卡片2</div>
+  <div className="bg-white p-4 rounded shadow">卡片3</div>
+  ...
+</Grid>
+
     </div>
   ),
 };

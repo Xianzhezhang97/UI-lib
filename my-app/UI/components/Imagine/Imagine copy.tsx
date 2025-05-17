@@ -188,48 +188,24 @@ export const Imagine = ({
     return () => observer.disconnect();
   }, [lazy, priority]);
   
-  // Use XMLHttpRequest to track real loading progress
+  // Simulated loading progress
   useEffect(() => {
-    if (!showProgress || isLoaded || hasError || !isInView) return;
+    if (!showProgress || isLoaded || hasError) return;
     
-    // Only track progress for remote URLs
-    if (!src || src.startsWith('data:') || src.startsWith('blob:')) {
-      setProgress(0);
-      return;
-    }
+    const interval = setInterval(() => {
+      setProgress(prevProgress => {
+        const nextProgress = prevProgress + (100 - prevProgress) / 10;
+        return nextProgress > 95 ? 95 : nextProgress;
+      });
+    }, 200);
     
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', src, true);
-    xhr.responseType = 'blob';
-    
-    xhr.onprogress = (event) => {
-      if (event.lengthComputable) {
-        const newProgress = Math.round((event.loaded / event.total) * 100);
-        setProgress(newProgress);
-      }
-    };
-    
-    xhr.onload = () => {
-      setProgress(100);
-      // Don't set isLoaded here - we still need the image element to trigger onLoad
-      // to ensure proper rendering
-    };
-    
-    xhr.onerror = () => {
-      // If XHR fails, we'll rely on the image's onError
-    };
-    
-    xhr.send();
-    
-    return () => {
-      xhr.abort();
-    };
-  }, [showProgress, isLoaded, hasError, isInView, src]);
+    return () => clearInterval(interval);
+  }, [showProgress, isLoaded, hasError]);
   
   // Event handlers
   const handleLoad = () => {
-    setProgress(100);
     setIsLoaded(true);
+    setProgress(100);
   };
   
   const handleError = () => {
@@ -238,7 +214,7 @@ export const Imagine = ({
   };
   
   // Generate class names
-  const containerClasses = `relative overflow-hidden w-full h-full ${className} ${getRoundedClass()}`;
+  const containerClasses = `relative overflow-hidden ${className} ${getRoundedClass()}`;
   
   const imageClasses = `
     w-full h-full object-${objectFit}
@@ -254,10 +230,11 @@ export const Imagine = ({
       className={containerClasses} 
       style={getContainerStyle()}
       onClick={onClick}
-    >
+      >
+          
       {/* Skeleton loader */}
       {!isLoaded && withSkeleton && (
-         <Skeleton className="w-full h-full" variant="rectangular" size="xl" /> 
+        <Skeleton className="w-full h-full" />
       )}
       
       {/* Placeholder image */}
@@ -265,12 +242,12 @@ export const Imagine = ({
         <img
           src={placeholder}
           alt="placeholder"
-          className="absolute inset-0 w-full h-full object-cover blur-md scale-110"
+          className="absolute inset-0 w-full h-full bg-gray-200 min-h-[100px] min-w-[100px] object-cover blur-md"
         />
       )}
       
       {/* Main image - only render when in view */}
-{isInView && !hasError && (
+      {isInView && !hasError && (
         <img
           ref={imgRef}
           src={src}
@@ -286,7 +263,7 @@ export const Imagine = ({
           sizes={sizes}
           {...rest}
         />
-      )} 
+      )}
       
       {/* Fallback image */}
       {hasError && fallback && (
@@ -306,12 +283,11 @@ export const Imagine = ({
       
       {/* Progress bar */}
       {showProgress && !isLoaded && !hasError && (
-        <div className="absolute bottom-0 left-0 right-0 h-full flex items-center justify-center rounded-lg overflow-hidden border border-gray-200">
-            
-               <CircularProgress value={progress} thickness={12} color="primary" size='xl' className="absolute inset-0" duration={0} />
+        <div className="absolute bottom-0 left-0 right-0 h-full flex items-center justify-center rounded-lg border bg-gray-200 overflow-hidden">
+            {/* <Skeleton className="w-full h-full" /> */}
+               <CircularProgress value={progress} thickness={12} color="success" size='xl' className="absolute inset-0" duration={0} />
         </div>
-          ) }
-          
+      )}
     </div>
   );
 };

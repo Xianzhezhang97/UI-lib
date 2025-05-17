@@ -177,7 +177,14 @@ const formatNumber = (
       significantDigits = Math.min(maxNumberPlaces, 21);
     }
     
-    let formatted = num.toExponential(significantDigits - 1);
+    let formatted = num.toExponential( significantDigits - 1 );
+    const toSuperscript = (numStr: string) => {
+  const superscripts: { [key: string]: string } = {
+    '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵',
+    '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '+': '⁺', '-': '⁻'
+  };
+  return numStr.split('').map(c => superscripts[c] || c).join('');
+};
     
     if (type === 'engineering') {
       const match = formatted.match(/^(.*?)e([+-]?\d+)$/);
@@ -194,10 +201,13 @@ const formatNumber = (
           coefficient = parseFloat(coefficient.toFixed(newSignificantDigits));
         }
         
-        formatted = `${coefficient}e${exponent >= 0 ? '+' : ''}${exponent}`;
+        formatted = `${coefficient}e${exponent >= 0 ? '' : ''}${exponent}`;
       }
       
-      return formatted.replace(/e([+-]?\d+)/, '×10<sup>$1</sup>');
+      return formatted.replace(/e([+-]?\d+)/, (_, exp) => {
+    const supExp = toSuperscript(exp);
+    return `×10${supExp}`;
+  });
     }
     
     return formatted;
@@ -242,27 +252,35 @@ const formatNumber = (
   }
 };
 
-const getVariants = (animation: AnimationType): Variants => {
+const getVariants = (animation: AnimationType, duration: number, delay: number): Variants => {
   switch (animation) {
     case 'flip':
       return {
         enter: (direction: 'up' | 'down') => ({
           rotateX: direction === 'up' ? 90 : -90,
-          opacity: 0
+          opacity: 0,
+          transition: {
+            type: "tween",
+            duration: duration / 2,
+            delay: delay,
+          }
         }),
         center: { 
           rotateX: 0, 
           opacity: 1,
           transition: {
-            type: "spring",
-            stiffness: 300,
-            damping: 20
+            type: "tween",
+            duration: duration / 2,
+            delay: delay,
           }
         },
         exit: (direction: 'up' | 'down') => ({
           rotateX: direction === 'up' ? -90 : 90,
           opacity: 0,
-          transition: { duration: 0.3 }
+          transition: { 
+            type: "tween",
+            duration: duration / 2,
+          }
         })
       };
     case 'slide':
@@ -275,15 +293,18 @@ const getVariants = (animation: AnimationType): Variants => {
           y: 0, 
           opacity: 1,
           transition: {
-            type: "spring",
-            stiffness: 300,
-            damping: 20
+            type: "tween",
+            duration: duration / 2,
+            delay: delay,
           }
         },
         exit: (direction: 'up' | 'down') => ({
           y: direction === 'up' ? '-100%' : '100%',
           opacity: 0,
-          transition: { duration: 0.3 }
+          transition: { 
+            type: "tween",
+            duration: duration / 2,
+          }
         })
       };
     case 'fade':
@@ -291,18 +312,24 @@ const getVariants = (animation: AnimationType): Variants => {
         enter: { opacity: 0 },
         center: { 
           opacity: 1,
-          transition: { duration: 0.3 }
+          transition: { 
+            type: "tween",
+            duration: duration / 2,
+            delay: delay,
+          }
         },
         exit: { 
           opacity: 0,
-          transition: { duration: 0.3 }
+          transition: { 
+            type: "tween",
+            duration: duration / 2,
+          }
         }
       };
     default:
       return {};
   }
 };
-
 const Digit: React.FC<{
   value: string;
   prevValue: string;
@@ -312,7 +339,7 @@ const Digit: React.FC<{
   fontSize?: string;
   commaWidth?: string;
 }> = ({ value, prevValue, animation, duration, delay, fontSize, commaWidth }) => {
-  const variants = getVariants(animation);
+  const variants = getVariants(animation, duration, delay);
   const hasChanged = value !== prevValue;
   const direction = hasChanged 
     ? (Number(value.toString()) > Number(prevValue.toString()) ? 'up' : 'down')
@@ -337,7 +364,7 @@ const Digit: React.FC<{
     return (
       <div 
         className={`relative inline-flex items-center justify-center font-medium ${
-          isComma || isDecimalPoint ? 'text-gray-500' : ''
+          isComma || isDecimalPoint ? 'text-gray-900' : ''
         }`}
         style={{ ...style, ...separatorStyle }}
         dangerouslySetInnerHTML={{ __html: value }}
@@ -350,12 +377,12 @@ const Digit: React.FC<{
       className="relative inline-flex overflow-hidden items-center justify-center"
       style={{ 
         width: isComma ? (commaWidth || '0.4em') : 
-               isDecimalPoint ? '0.3em' : '0.8em',
+               isDecimalPoint ? '0.4em' : '0.8em',
         minWidth: isComma ? (commaWidth || '0.4em') : 
-                  isDecimalPoint ? '0.3em' : '0.8em',
+                  isDecimalPoint ? '0.4em' : '0.8em',
         height: '1em',
         margin: isComma ? '0 -0.05em' : 
-                isDecimalPoint ? '0 -0.1em' : '0',
+                isDecimalPoint ? '0 -0.05em' : '0',
         ...style
       }}
     >
@@ -377,7 +404,7 @@ const Digit: React.FC<{
                 damping: 20
               }}
               className={`absolute inset-0 flex items-center justify-center font-medium ${
-                isComma || isDecimalPoint ? 'text-gray-500' : ''
+                isComma || isDecimalPoint ? 'text-gray-900' : ''
               }`}
               dangerouslySetInnerHTML={{ __html: prevValue }}
             />

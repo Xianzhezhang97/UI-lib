@@ -1,5 +1,5 @@
-import React from 'react';
 import { cn } from '@/utils/cn';
+import React from 'react';
 
 interface GridProps extends React.HTMLAttributes<HTMLDivElement> {
   cols?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
@@ -9,6 +9,8 @@ interface GridProps extends React.HTMLAttributes<HTMLDivElement> {
   flow?: 'row' | 'col' | 'dense';
   align?: 'start' | 'center' | 'end' | 'stretch';
   justify?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
+  responsive?: boolean; // 💡 新增
+  minWidth?: number; // 💡 卡片最小宽度
 }
 
 const gapStyles = {
@@ -43,15 +45,21 @@ export const Grid: React.FC<GridProps> = ({
   flow = 'row',
   align = 'stretch',
   justify = 'start',
+  responsive = false,
+  minWidth = 200,
   className,
   children,
   ...props
 }) => {
+  const responsiveClass = responsive
+    ? `[grid-template-columns:repeat(auto-fit,minmax(${minWidth}px,1fr))]`
+    : `grid-cols-${cols}`;
+
   return (
     <div
       className={cn(
         'grid',
-        `grid-cols-${cols}`,
+        responsiveClass,
         gapStyles[gap],
         autoCols && 'auto-cols-auto',
         autoRows && 'auto-rows-auto',

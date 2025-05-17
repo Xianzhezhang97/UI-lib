@@ -42,7 +42,7 @@ const meta: Meta<typeof AnimatedNumber> = {
     },
     numberType: {
       control: { type: 'radio' },
-      options: [ 'standard', 'scientific', 'engineering' ],
+      options: ['standard', 'scientific', 'engineering'],
       if: { arg: 'format', eq: 'none' },
       description: 'The number type to use.',
     },
@@ -56,7 +56,7 @@ const meta: Meta<typeof AnimatedNumber> = {
       if: { arg: 'useShortFormat', eq: true },
     },
     decimalPlaces: {
-      control: { type: 'range', min: 0, max: 5, step: 1 },
+      control: { type: 'number', min: 0, max: 10, step: 1},
       description: 'The number of decimal places to show.',
       if: { arg: 'useShortFormat', eq: false },
     },
@@ -77,6 +77,10 @@ const meta: Meta<typeof AnimatedNumber> = {
       control: { type: 'text' },
       description: 'The suffix to show after the number.',
     },
+    commaWidth: {
+      control: { type: 'text' },
+      description: 'The width of the comma in em.',
+    }
   },
 };
 
@@ -159,9 +163,9 @@ export const Interactive: Story = {
     value: 1234,
     animation: 'slide',
     duration: 0.5,
-    format: 'none',
-    currencyType: 'USD',
-    useShortFormat: true,
+    format: 'currency',
+    currencyType: 'CNY',
+    useShortFormat: false,
     numberType: 'standard',
     decimalPlaces: 0,
     delayPerChar: 0.05,
@@ -172,6 +176,7 @@ export const Interactive: Story = {
     decimalPartSize: '1em',
     suffixSize: '1em',
     maxNumberPlaces: 3,
+    commaWidth: '0.4em',
   },
 };
 
@@ -219,7 +224,7 @@ export const DecimalFormat: Story = {
   },
 };
 
-export const ShortFormatDecimal: Story = {
+export const ShortFormat: Story = {
   args: {
     value: 1234567,
     format: 'decimal',
@@ -230,23 +235,9 @@ export const ShortFormatDecimal: Story = {
     decimalPlaces: 1,
     currencySymbolSize: '1em',
     integerPartSize: '1.2em',
-    decimalPartSize: '1em',
+    decimalPartSize: '1.2em',
     suffixSize: '1em',
+    maxNumberPlaces: 3,
   },
 };
 
-export const ShortFormat: Story = {
-  args: {
-    value: 1234567,
-    format: 'decimal',
-    useShortFormat: true,
-    numberType: 'standard',
-    animation: 'slide',
-    duration: 0.5,
-    decimalPlaces: 1,
-    currencySymbolSize: '0.8em',
-    integerPartSize: '1.2em',
-    decimalPartSize: '0.8em',
-    suffixSize: '0.8em',
-  },
-};

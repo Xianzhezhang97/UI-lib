@@ -39,7 +39,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   size = 'md',
   isLoaded = false,
   fadeDuration = 0.2,
-  speed = 0.7,
+  speed = 0.6,
   startColor = 'from-gray-200',
   endColor = 'to-gray-300',
   className,
