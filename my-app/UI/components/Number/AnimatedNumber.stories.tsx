@@ -2,6 +2,7 @@
 import { Button } from '@/UI/Components/Button/Button';
 import { CopyButton } from '@/UI/Components/Button/CopyButton';
 import { Input } from '@/UI/Components/Input/Input';
+import { Slider } from '@/UI/Components/Slider/Slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/UI/Components/Tabs/Tabs';
 import { Meta, StoryObj } from '@storybook/react';
 import { useCallback, useEffect, useState } from 'react';
@@ -56,7 +57,7 @@ import { AnimatedNumber } from './AnimatedNumber';
   },
   argTypes: {
     value: {
-      control: { type: 'number' },
+      control: { type: 'range', min: -10000000, max: 10000000, step: 1000 },
       description: 'The numeric value to display',
       table: {
         type: { summary: 'number | string' },
@@ -284,13 +285,12 @@ const InteractiveDemo = (props: any) => {
         </div>
 
         <div className="py-2">
-          <input
-            type='range'
-            value={value}
+          <Slider 
+            value={[value]}
             min={-10000000}
             max={10000000}
-            step={1000}
-            onChange={(e) => handleChange(parseFloat(e.target.value))}
+            step={1}
+            onChange={(e) => handleChange(parseFloat(value))}
             className="w-full"
           />
         </div>

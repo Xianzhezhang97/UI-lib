@@ -85,7 +85,9 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
 
   useEffect(() => {
     const numValue = typeof value === 'number' ? value : parseFloat(value.toString());
-    if (!isNaN(numValue)) {
+    if ( !isNaN( numValue ) )
+    {
+      
       setPrevFormattedParts(formattedParts);
       const formatted = formatNumber(
         numValue, 
@@ -106,6 +108,8 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
       });
       
       prevValueRef.current = numValue;
+
+
     }
   }, [value, format, decimalPlaces, locale, currencyType, useShortFormat, numberType, maxNumberPlaces]);
 
