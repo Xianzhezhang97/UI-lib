@@ -42,6 +42,7 @@ export const getVariants = (
         enter: (direction: 'up' | 'down') => ({
           rotateX: direction === 'up' ? 90 : -90,
           opacity: 0,
+
           transition: commonTransition(duration, delay)
         }),
         ...commonStates,
@@ -52,6 +53,7 @@ export const getVariants = (
         exit: (direction: 'up' | 'down') => ({
           ...commonStates.exit,
           rotateX: direction === 'up' ? -90 : 90,
+          transition: commonTransition(duration, delay)
         })
       };
 
@@ -70,6 +72,7 @@ export const getVariants = (
         exit: (direction: 'up' | 'down') => ({
           ...commonStates.exit,
           y: direction === 'up' ? '-100%' : '100%',
+          transition: commonTransition(duration, delay)
         })
       };
 

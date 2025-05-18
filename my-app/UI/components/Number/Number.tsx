@@ -83,35 +83,37 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
   });
   const prevValueRef = useRef(0);
 
-  useEffect(() => {
-    const numValue = typeof value === 'number' ? value : parseFloat(value.toString());
-    if ( !isNaN( numValue ) )
-    {
-      
-      setPrevFormattedParts(formattedParts);
-      const formatted = formatNumber(
-        numValue, 
-        format, 
-        decimalPlaces, 
-        locale,
-        currencyType,
-        useShortFormat,
-        numberType,
-        maxNumberPlaces
-      );
-      
-      const parsedParts = parseFormattedNumber(formatted, format, locale, currencyType);
-      
-      setFormattedParts({
-        ...parsedParts,
-        fullText: formatted
-      });
-      
-      prevValueRef.current = numValue;
+const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
+useEffect(() => {
+  const numValue = typeof value === 'number' ? value : parseFloat(value.toString());
+  if (isNaN(numValue) ) return;
 
-    }
-  }, [value, format, decimalPlaces, locale, currencyType, useShortFormat, numberType, maxNumberPlaces]);
+  if (debounceTimer.current) {
+    clearTimeout(debounceTimer.current);
+  }
+
+  debounceTimer.current = setTimeout(() => {
+    setPrevFormattedParts(formattedParts);
+    const formatted = formatNumber(
+      numValue, 
+      format, 
+      decimalPlaces, 
+      locale,
+      currencyType,
+      useShortFormat,
+      numberType,
+      maxNumberPlaces
+    );
+    const parsedParts = parseFormattedNumber(formatted, format, currencyType);
+    setFormattedParts({
+      ...parsedParts,
+      fullText: formatted
+    });
+    prevValueRef.current = numValue;
+  }, 300); 
+}, [value, format, decimalPlaces, currencyType, useShortFormat, numberType, maxNumberPlaces]);
+
 
   const calculateDelay = (index: number, totalLength: number, changed: boolean) => {
     if (!changed || animation === 'none') return 0;
@@ -146,7 +148,7 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
   return (
     <div
       className={cn(
-        'inline-flex items-center text-base font-medium tabular-nums',
+        'inline-flex items-end text-base font-medium tabular-nums',
       )}
     >
       {prefix && <span className="mr-1" dangerouslySetInnerHTML={{ __html: prefix }} />}

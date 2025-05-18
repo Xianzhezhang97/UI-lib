@@ -1,6 +1,8 @@
 import { cn } from '@/utils/cn';
 import { HTMLMotionProps, motion } from 'framer-motion';
 import React from 'react';
+import { getColorFromName } from './util/getColorFromString';
+import getContrastTextColor from './util/getContrastTextColor';
 
 export interface AvatarProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   src?: string;
@@ -11,24 +13,25 @@ export interface AvatarProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   bordered?: boolean;
   ring?: boolean;
   ringColor?: string;
+  message?: number;
 }
 
 const sizeStyles = {
   sm: {
-    container: 'h-8 w-8 md:h-12 md:w-12',
-    text: 'text-xs',
+    container: 'h-12 w-12 md:h-14 md:w-14',
+    text: 'text-md ',
   },
   md: {
-    container: 'h-8 w-8 md:h-14 md:w-14 lg:h-16 lg:w-16',
-    text: 'text-sm',
+    container: 'h-12 w-12 md:h-16 md:w-16 lg:h-16 lg:w-16',
+    text: 'text-md md:text-lg ',
   },
   lg: {
-    container: 'h-10 w-10 md:h-16 md:w-16 lg:h-20 lg:w-20',
-    text: 'text-base',
+    container: 'h-12 w-12 md:h-18 md:w-18 lg:h-20 lg:w-20',
+    text: 'text-md md:text-lg lg:text-xl',
   },
   xl: {
-    container: 'h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 xl:h-24 xl:w-24',
-    text: 'text-lg',
+    container: 'h-12 w-12 md:h-20 md:w-20 lg:h-22 lg:w-22 xl:h-24 xl:w-24',
+    text: 'text-md md:text-lg lg:text-xl xl:text-xl',
   },
 };
 
@@ -51,6 +54,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
       bordered = false,
       ring = false,
       ringColor = 'ring-primary-500',
+      message,
       ...props
     },
     ref
@@ -66,10 +70,15 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
     return (
       <div className="relative inline-block">
         <motion.div
-          ref={ref}
+          ref={ ref }
+          style={ {
+            backgroundColor: (name && !src) ? getColorFromName(name) : undefined,
+          }}
           className={cn(
-            'relative flex items-center justify-center overflow-hidden rounded-full bg-gray-100',
-            sizeStyles[size].container,
+            'relative flex items-center justify-center overflow-hidden rounded-full ',
+            sizeStyles[ size ].container,
+            !src && 'bg-gray-100',
+            name && `text-${getContrastTextColor(getColorFromName(name))}`,
             bordered && 'border-2 border-white',
             ring && `ring-2 ${ringColor}`,
             className
@@ -85,8 +94,9 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
           ) : name ? (
             <span
               className={cn(
-                'font-medium text-gray-600',
-                sizeStyles[size].text
+                'font-medium text-center',
+                sizeStyles[size].text,
+                name && `text-${getContrastTextColor(getColorFromName(name))}`,
               )}
             >
               {getInitials(name)}
@@ -101,10 +111,25 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
             </svg>
           )}
         </motion.div>
+        {message && (
+   <span className="absolute xl:-top-[8px] xl:-right-[8px] md:-top-[6px] md:-right-[6px] -top-[12px] -right-[12px]">
+  <div
+    className={cn(
+      'border-2 border-white inline-flex ',
+      'bg-gradient-to-r from-red-500 to-red-300 flex items-center justify-center',
+      'h-5 px-1 ', // 高度固定，宽度最小，超出自动撑开
+      'rounded-full' // 关键：圆形/椭圆通吃
+    )}
+  >
+    <div className="px-1 text-white text-xs font-semibold text-center">{message<100? message: '99+'}</div> 
+  </div>
+</span>
+
+        )}
         {status && (
           <span
             className={cn(
-              'absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white',
+              'absolute bottom-0 right-0 xl:h-4 xl:w-4 lg:h-3.5 lg:w-3.5 md:h-3.5 md:w-3.5 h-2 w-2 rounded-full border-2 border-white',
               statusStyles[status]
             )}
           />

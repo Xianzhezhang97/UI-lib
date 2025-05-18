@@ -1,4 +1,4 @@
-import { NumberFormat, NumberType } from "../AnimatedNumber";
+import { NumberFormat, NumberType } from "../Number";
 import { applyCurrencyShortFormat } from "./applyCurrencyShortFormat";
 import { formatWithType } from "./formatWithType";
 

@@ -1,4 +1,4 @@
-import { NumberFormat } from "../AnimatedNumber";
+import { NumberFormat } from "../Number";
 // This function is a helper function that parses a formatted number string into its currency symbol, integer part, and decimal part.
 // It is used by the AnimatedNumber component to parse the formatted number string into its currency symbol, integer part, and decimal part.
 // 
@@ -12,7 +12,6 @@ import { NumberFormat } from "../AnimatedNumber";
 export const parseFormattedNumber = (
   formattedValue: string,
   format: NumberFormat,
-  locale: string,
   currencyType: string
 ): { currencySymbol: string, integerPart: string, decimalPart: string } => {
   let result = {
@@ -22,7 +21,7 @@ export const parseFormattedNumber = (
   };
 
   if (format === 'currency') {
-    const formatter = new Intl.NumberFormat(locale, {
+    const formatter = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currencyType
     });
@@ -45,7 +44,7 @@ export const parseFormattedNumber = (
       }
     }
   } else {
-    const decimalSeparator = new Intl.NumberFormat(locale).format(1.1).charAt(1);
+    const decimalSeparator = new Intl.NumberFormat('en-US').format(1.1).charAt(1);
     const separatorIndex = formattedValue.indexOf(decimalSeparator);
     
     if (separatorIndex !== -1) {

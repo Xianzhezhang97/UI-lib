@@ -1,15 +1,14 @@
 // AnimatedNumber.stories.tsx
 import { Button } from '@/UI/Components/Button/Button';
-import { CopyButton } from '@/UI/Components/Button/CopyButton';
+// import { CopyButton } from '@/UI/Components/Button/CopyButton';
 import { Input } from '@/UI/Components/Input/Input';
 import { Slider } from '@/UI/Components/Slider/Slider';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/UI/Components/Tabs/Tabs';
 import { Meta, StoryObj } from '@storybook/react';
 import { useCallback, useEffect, useState } from 'react';
-import { AnimatedNumber } from './AnimatedNumber';
+import { AnimatedNumber } from './Number';
 
 const meta: Meta<typeof AnimatedNumber> = {
-  title: 'Components/Data Display/AnimatedNumber',
+  title: 'Components/Number',
   component: AnimatedNumber,
   tags: ['autodocs'],
   parameters: {
@@ -53,11 +52,11 @@ import { AnimatedNumber } from './AnimatedNumber';
 />
         `,
       },
-    },  
+    },
   },
   argTypes: {
     value: {
-      control: { type: 'range', min: -10000000, max: 10000000, step: 1000 },
+      control: { type: 'number', min: 0, max: 10000000, step: 1 },
       description: 'The numeric value to display',
       table: {
         type: { summary: 'number | string' },
@@ -65,20 +64,44 @@ import { AnimatedNumber } from './AnimatedNumber';
         category: 'Data',
       },
     },
+    prefix: {
+      control: { type: 'text' },
+      description: 'Prefix to be displayed before the number',
+      table: {
+        defaultValue: { summary: '' },
+        category: 'Data',
+      },
+    },
+    suffix: {
+      control: { type: 'text' },
+      description: 'Suffix to be displayed after the number',
+      table: {
+        defaultValue: { summary: '' },
+        category: 'Data',
+      },
+    },
+    locale: {
+      control: { type: 'text' },
+      description: 'Locale for number formatting',
+      table: {
+        defaultValue: { summary: 'en-US' },
+        category: 'Data',
+      },
+    },
     format: {
       options: ['none', 'currency', 'percentage', 'decimal'],
-      control: { type: 'select' },
+      control: { type: 'radio' },
       description: 'Number formatting style',
-      table: { 
+      table: {
         defaultValue: { summary: 'none' },
         category: 'Formatting',
       },
     },
     animation: {
       options: ['flip', 'slide', 'fade', 'none'],
-      control: { type: 'select' },
+      control: { type: 'radio' },
       description: 'Animation type for number transitions',
-      table: { 
+      table: {
         defaultValue: { summary: 'slide' },
         category: 'Animation',
       },
@@ -86,23 +109,40 @@ import { AnimatedNumber } from './AnimatedNumber';
     duration: {
       control: { type: 'range', min: 0.1, max: 2, step: 0.1 },
       description: 'Animation duration in seconds',
-      table: { 
+      table: {
         defaultValue: { summary: '0.5' },
+        category: 'Animation',
+      },
+    },
+    delayPerChar: {
+      control: { type: 'range', min: 0, max: 1, step: 0.01 },
+      description: 'Delay per character in seconds',
+      table: {
+        defaultValue: { summary: '0.05' },
         category: 'Animation',
       },
     },
     decimalPlaces: {
       control: { type: 'range', min: 0, max: 10, step: 1 },
       description: 'Number of decimal places',
-      table: { 
+      if: { arg: 'useShortFormat', eq: false },
+      table: {
         defaultValue: { summary: '2' },
         category: 'Formatting',
+      },
+    },
+    commaWidth: {
+      control: { type: 'text' },
+      description: 'Width of comma in em',
+      table: {
+        defaultValue: { summary: '0.4em' },
+        category: 'Sizing',
       },
     },
     currencySymbolSize: {
       control: { type: 'text' },
       description: 'Size of currency symbol (CSS value)',
-      table: { 
+      table: {
         defaultValue: { summary: '0.8em' },
         category: 'Sizing',
       },
@@ -110,7 +150,7 @@ import { AnimatedNumber } from './AnimatedNumber';
     integerPartSize: {
       control: { type: 'text' },
       description: 'Size of integer part (CSS value)',
-      table: { 
+      table: {
         defaultValue: { summary: '1.2em' },
         category: 'Sizing',
       },
@@ -118,7 +158,7 @@ import { AnimatedNumber } from './AnimatedNumber';
     decimalPartSize: {
       control: { type: 'text' },
       description: 'Size of decimal part (CSS value)',
-      table: { 
+      table: {
         defaultValue: { summary: '0.8em' },
         category: 'Sizing',
       },
@@ -126,33 +166,36 @@ import { AnimatedNumber } from './AnimatedNumber';
     suffixSize: {
       control: { type: 'text' },
       description: 'Size of suffix (CSS value)',
-      table: { 
+      table: {
         defaultValue: { summary: '0.8em' },
         category: 'Sizing',
       },
     },
     useShortFormat: {
       control: 'boolean',
-      description: 'Use short format for large numbers (1.2M instead of 1,200,000)',
-      table: { 
+      description:
+        'Use short format for large numbers (1.2M instead of 1,200,000)',
+      table: {
         defaultValue: { summary: 'false' },
         category: 'Formatting',
       },
     },
     numberType: {
       options: ['standard', 'engineering', 'scientific'],
-      control: { type: 'select' },
+      control: { type: 'radio' },
       description: 'Number notation type for formatting',
-      table: { 
+      if: { arg: 'useShortFormat', eq: false },
+      table: {
         defaultValue: { summary: 'standard' },
         category: 'Formatting',
       },
     },
     currencyType: {
-      options: ['AUD', 'USD', 'EUR', 'GBP', 'JPY', 'CNY'],
-      control: { type: 'select' },
+      options: ['CNY', 'AUD', 'USD', 'EUR', 'GBP', 'JPY', 'NZD', 'VND'],
+      control: { type: 'radio' },
+      if: { arg: 'format', eq: 'currency' },
       description: 'Currency type for formatting',
-      table: { 
+      table: {
         defaultValue: { summary: 'AUD' },
         category: 'Formatting',
       },
@@ -160,7 +203,8 @@ import { AnimatedNumber } from './AnimatedNumber';
     maxNumberPlaces: {
       control: { type: 'range', min: 0, max: 10, step: 1 },
       description: 'Maximum number of decimal places',
-      table: { 
+      if: { arg: 'useShortFormat', eq: true },
+      table: {
         defaultValue: { summary: '2' },
         category: 'Formatting',
       },
@@ -173,13 +217,19 @@ export default meta;
 type Story = StoryObj<typeof AnimatedNumber>;
 
 // 代码展示组件
-const CodeBlock = ({ code, language = 'tsx' }: { code: string, language?: string }) => (
+const CodeBlock = ({
+  code,
+  language = 'tsx',
+}: {
+  code: string;
+  language?: string;
+}) => (
   <div className='relative bg-gray-800 rounded-md p-4 mt-4'>
     <pre className='text-gray-100 text-sm font-mono overflow-x-auto'>
       <code>{code}</code>
     </pre>
     <div className='absolute top-2 right-2'>
-      <CopyButton text={code} />
+      {/* <CopyButton text={code} /> */}
     </div>
   </div>
 );
@@ -201,8 +251,7 @@ const InteractiveDemo = (props: any) => {
   const handleChange = useCallback((newValue: number) => {
     setValue(newValue);
     setInputValue(newValue.toString());
-  }, [] );
-
+  }, []);
 
   // Generate formatted demo code
   const generateCode = (format: string) => {
@@ -252,11 +301,8 @@ const InteractiveDemo = (props: any) => {
   return (
     <div className='space-y-8 min-w-[600px]'>
       {/* 组件展示 */}
-      <div className='border p-6 rounded-lg bg-background shadow-lg text-center'>
-        <div className="mb-6 text-lg text-gray-500">
-          Current Value: {value.toLocaleString()}
-        </div>
-        <div className="p-4 flex items-center justify-center">
+      <div className='border p-6 space-y-8 rounded-[28px] bg-background text-center'>
+        <div className='flex items-center justify-center'>
           <AnimatedNumber
             value={value}
             format={props.format}
@@ -267,70 +313,101 @@ const InteractiveDemo = (props: any) => {
             numberType={props.numberType}
             useShortFormat={props.useShortFormat}
             maxNumberPlaces={props.maxNumberPlaces}
+            delayPerChar={props.delayPerChar}
+            prefix={props.prefix}
+            suffix={props.suffix}
+            locale={props.locale}
             suffixSize={props.suffixSize || '1.5em'}
             integerPartSize={props.integerPartSize || '1.2em'}
             decimalPartSize={props.decimalPartSize || '1em'}
             currencySymbolSize={props.currencySymbolSize || '1em'}
+            commaWidth={props.commaWidth || '0em'}
           />
         </div>
-      </div>
 
-      {/* 控制面板 */}
-      <div className='bg-gray-100 p-4 rounded-lg space-y-4'>
+        <div className='mb-6 text-lg text-gray-500'>
+          Current Value: {value.toLocaleString()}
+        </div>
         <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-          <Button onClick={() => handleChange(value * 10)} variant="outline">×10</Button>
-          <Button onClick={() => handleChange(value / 10)} variant="outline">÷10</Button>
-          <Button onClick={() => handleChange(-value)} variant="outline">± Toggle</Button>
-          <Button onClick={() => handleChange(1234567.89)} variant="outline">Reset</Button>
+          <Button
+            onClick={() => handleChange(value + 1)}
+            variant='primary'
+          >
+            +1
+          </Button>
+          <Button
+            onClick={() => handleChange(value - 1)}
+            variant='primary'
+          >
+            -1
+          </Button>
+          <Button
+            onClick={() => handleChange(value + 10)}
+            variant='primary'
+          >
+            +10
+          </Button>
+          <Button
+            onClick={() => handleChange(value - 10)}
+            variant='primary'
+          >
+            -10
+          </Button>
+
+          <Button
+            onClick={() => handleChange(value * 10)}
+            variant='primary'
+          >
+            ×10
+          </Button>
+          <Button
+            onClick={() => handleChange(value / 10)}
+            variant='primary'
+          >
+            ÷10
+          </Button>
+          <Button
+            onClick={() => handleChange(-value)}
+            variant='primary'
+          >
+            ± Toggle
+          </Button>
+          <Button
+            onClick={() => handleChange(499.45)}
+            variant='primary'
+          >
+            Reset
+          </Button>
         </div>
 
-        <div className="py-2">
-          <Slider 
+        <div className='flex items-center gap-4 w-full'>
+          <Slider
             value={[value]}
-            min={-10000000}
-            max={10000000}
+            min={0}
+            max={10000}
             step={1}
-            onChange={(e) => handleChange(parseFloat(value))}
-            className="w-full"
+            // onChange={handleChange(value)}
+            defaultValue={value}
+            onValueChange={(value: number[]) => handleChange(value[0])}
+            className='w-full'
           />
         </div>
 
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-500 whitespace-nowrap">Custom Value:</span>
+        <div className='flex items-center gap-4 w-full'>
+          <span className='text-sm text-gray-500 whitespace-nowrap'>
+            Custom Value:
+          </span>
           <Input
-            type='text'
+            type='number'
             value={inputValue}
             onChange={(e) => {
-              setInputValue(value.toString());
+              setInputValue(e.target.value);
               const parsed = parseFloat(e.target.value);
               if (!isNaN(parsed)) handleChange(parsed);
             }}
-            className='text-lg'
+            className='text-lg rounded-[14px] w-full'
           />
         </div>
-      </div>
-
-      {/* 实时配置生成器 */}
-      <div className="mt-8">
-        <Tabs defaultValue='react'>
-          <TabsList className="mb-2">
-            <TabsTrigger value='react'>React</TabsTrigger>
-            <TabsTrigger value='vue'>Vue</TabsTrigger>
-            <TabsTrigger value='angular'>Angular</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value='react'>
-            <CodeBlock code={generateCode('react')} />
-          </TabsContent>
-          
-          <TabsContent value='vue'>
-            <CodeBlock code={generateCode('vue')} />
-          </TabsContent>
-          
-          <TabsContent value='angular'>
-            <CodeBlock code={generateCode('angular')} />
-          </TabsContent>
-        </Tabs>
       </div>
     </div>
   );
@@ -340,40 +417,28 @@ const InteractiveDemo = (props: any) => {
 export const Interactive: Story = {
   render: (args) => <InteractiveDemo {...args} />,
   args: {
-    value: 1234567.89,
-    format: 'none',
-    animation: 'slide',
-    duration: 0.5,
-    decimalPlaces: 2,
-  },
-};
-
-// 每个故事都清晰地显示参数，而不是使用render函数包装
-export const Currency: Story = {
-  args: {
-    value: 1234.56,
+    value: 499,
     format: 'currency',
-    currencyType: 'USD',
     animation: 'slide',
-    duration: 0.5,
-    decimalPlaces: 2,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'Display animated numbers with currency formatting.',
-      },
-    },
+    duration: 2,
+    decimalPlaces: 0,
+    maxNumberPlaces: 0,
+    useShortFormat: false,
+    numberType: 'standard',
+    currencyType: 'CNY',
+    currencySymbolSize: '1.2em',
+    commaWidth: '0.2em',
   },
 };
 
 export const Percentage: Story = {
   args: {
-    value: 75.5,
+    value: 0.7532,
     format: 'percentage',
     animation: 'slide',
     duration: 0.5,
-    decimalPlaces: 1,
+    decimalPlaces: 2,
+    useShortFormat: false,
   },
   parameters: {
     docs: {
@@ -386,29 +451,44 @@ export const Percentage: Story = {
 
 export const ShortFormat: Story = {
   args: {
-    value: 1234567,
-    format: 'decimal',
+    value: 1234,
+    format: 'none',
     useShortFormat: true,
     animation: 'slide',
     duration: 0.5,
     decimalPlaces: 1,
+    maxNumberPlaces: 3,
+    currencySymbolSize: '1em',
+    integerPartSize: '1.2em',
+    decimalPartSize: '1.2em',
+    suffixSize: '',
+    commaWidth: '',
   },
   parameters: {
     docs: {
       description: {
-        story: 'Display large numbers in a compact format (1.2M instead of 1,200,000).',
+        story:
+          'Display large numbers in a compact format (1.2M instead of 1,200,000).',
       },
     },
   },
 };
 
-export const FlipAnimation: Story = {
+export const Animation: Story = {
   args: {
-    value: 1234.56,
+    value: 22549.56,
     format: 'none',
-    animation: 'flip',
+    animation: 'slide',
     duration: 0.8,
     decimalPlaces: 2,
+    currencySymbolSize: '2em',
+    integerPartSize: '2em',
+    decimalPartSize: '2em',
+    suffixSize: '2em',
+    commaWidth: '0.2em',
+    delayPerChar: 0.07,
+    useShortFormat: false,
+    numberType: 'standard',
   },
   parameters: {
     docs: {
@@ -417,6 +497,7 @@ export const FlipAnimation: Story = {
       },
     },
   },
+  render: (args) => <AnimatedNumber {...args} />,
 };
 
 export const FadeAnimation: Story = {
@@ -466,8 +547,33 @@ export const EngineeringNotation: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Display numbers in engineering notation with exponents in multiples of 3.',
+        story:
+          'Display numbers in engineering notation with exponents in multiples of 3.',
       },
     },
   },
+};
+
+export const Currency: Story = {
+  args: {
+    value: 499.45,
+    format: 'currency',
+    animation: 'slide',
+    duration: 0.5,
+    decimalPlaces: 2,
+    maxNumberPlaces: 3,
+    useShortFormat: false,
+    numberType: 'standard',
+    currencyType: 'AUD',
+    currencySymbolSize: '1.2em',
+    commaWidth: '0.24em',
+    integerPartSize: '1.6em',
+    decimalPartSize: '1.2em',
+    prefix: '',
+    suffix: '/ pcs',
+    suffixSize: '0.7em',
+    delayPerChar: 0.05,
+  },
+
+  render: (args) => <InteractiveDemo {...args} />,
 };
