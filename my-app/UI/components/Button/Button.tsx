@@ -9,9 +9,9 @@ export interface ButtonProps
     | 'secondary'
     | 'outline'
     | 'ghost'
+    | 'icon'
     | 'link'
-    | 'full'
-    | 'icon';
+    | 'full';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
@@ -77,7 +77,9 @@ const variantStyles = {
   `,
 
   icon: `
-    w-10 h-10 
+    w-10 h-10
+    hover:bg-primary-50
+    active:bg-primary-100 
     rounded-full 
     transition-all
   `,
@@ -104,7 +106,8 @@ const sizeStyles = {
 
   lg: `
     px-8 py-3 
-    text-lg 
+    text-lg
+    rounded-full
     h-12 min-w-[96px] 
     flex items-center justify-center 
     sm:px-6 sm:py-2.5 

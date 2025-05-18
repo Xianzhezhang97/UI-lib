@@ -9,7 +9,7 @@ export interface CardProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
 }
 
 const variantStyles = {
-  primary: 'bg-white shadow-lg',
+  primary: 'bg-white border border-gray-200',
   secondary: 'bg-white border border-gray-200',
   tertiary: 'bg-gray-100',
 };

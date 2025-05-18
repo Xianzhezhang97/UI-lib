@@ -1,11 +1,12 @@
+import { cn } from "@/utils/cn";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { CircularProgress } from "../Progress/CircularProgress";
-import { Skeleton } from "../Skeleton/Skeleton";
+import { SkeletonImage } from "../Skeleton/Skeleton";
 
 // AspectRatio types
 type AspectRatioType = "1:1" | "4:3" | "16:9" | "21:9" | "3:4" | "9:16" | string;
 
-interface ImagineProps {
+interface ImageProps {
   // Essential props
   src: string;
   alt: string;
@@ -56,7 +57,7 @@ interface ImagineProps {
   onClick?: () => void;
 }
 
-export const Imagine = ({
+export const ImagePro = ({
   // Essential props
   src,
   alt,
@@ -105,7 +106,7 @@ export const Imagine = ({
   
   // Rest props
   ...rest
-}: ImagineProps) => {
+}: ImageProps) => {
   // States
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -211,8 +212,7 @@ export const Imagine = ({
     
     xhr.onload = () => {
       setProgress(100);
-      // Don't set isLoaded here - we still need the image element to trigger onLoad
-      // to ensure proper rendering
+      // Don't set isLoaded here - we'll rely on the image's onLoad event
     };
     
     xhr.onerror = () => {
@@ -238,10 +238,10 @@ export const Imagine = ({
   };
   
   // Generate class names
-  const containerClasses = `relative overflow-hidden w-full h-full ${className} ${getRoundedClass()}`;
+  const containerClasses = `relative overflow-hidden w-full h-full  flex justify-center items-center ${className} ${getRoundedClass()}`;
   
   const imageClasses = `
-    w-full h-full object-${objectFit}
+    w-full h-full object-${objectFit} absolute top-0 left-0 bottom-0 right-0
     ${fadeIn ? `transition-opacity duration-${fadeInDuration}` : ""}
     ${isLoaded ? "opacity-100" : "opacity-0"}
     ${zoomOnHover ? "transition-transform duration-300 hover:scale-110" : ""}
@@ -255,40 +255,23 @@ export const Imagine = ({
       style={getContainerStyle()}
       onClick={onClick}
     >
-      {/* Skeleton loader */}
-      {!isLoaded && withSkeleton && (
-         <Skeleton className="w-full h-full" variant="rectangular" size="xl" /> 
-      )}
-      
-      {/* Placeholder image */}
-      {!isLoaded && placeholder && (
+      {/* Placeholder image - shown while loading */}
+      {!isLoaded && !hasError && placeholder && (
         <img
           src={placeholder}
           alt="placeholder"
           className="absolute inset-0 w-full h-full object-cover blur-md scale-110"
         />
       )}
-      
-      {/* Main image - only render when in view */}
-{isInView && !hasError && (
-        <img
-          ref={imgRef}
-          src={src}
-          alt={alt}
-          width={typeof width === 'number' ? width : undefined}
-          height={typeof height === 'number' ? height : undefined}
-          onLoad={handleLoad}
-          onError={handleError}
-          className={imageClasses}
-          style={{ objectPosition }}
-          loading={priority ? "eager" : "lazy"}
-          srcSet={srcSet}
-          sizes={sizes}
-          {...rest}
+      {isLoaded}
+      {/* Main content area with skeleton or image */}
+
+        <SkeletonImage aspectRatio="landscape" variant="image"
+          className="w-full  h-full rounded-[20px] absolute top-0 left-0 bottom-0 right-0 object-cover flex justify-center items-center" 
         />
-      )} 
+
       
-      {/* Fallback image */}
+      {/* Fallback image - shown on error */}
       {hasError && fallback && (
         <img
           src={fallback}
@@ -297,21 +280,44 @@ export const Imagine = ({
         />
       )}
       
-      {/* Error message when no fallback */}
+      {/* Error message - shown on error with no fallback */}
       {hasError && !fallback && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-500">
           <span>Image failed to load</span>
         </div>
       )}
       
-      {/* Progress bar */}
+      {/* Progress indicator - shown while loading if showProgress is true */}
       {showProgress && !isLoaded && !hasError && (
-        <div className="absolute bottom-0 left-0 right-0 h-full flex items-center justify-center rounded-lg overflow-hidden border border-gray-200">
-            
-               <CircularProgress value={progress} thickness={12} color="primary" size='xl' className="absolute inset-0" duration={0} />
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-50 bg-opacity-75">
+          <CircularProgress 
+            value={progress} 
+            thickness={12} 
+            color="primary" 
+            size='xl' 
+            duration={0} 
+          />
         </div>
-          ) }
-          
+      ) }
+      {isInView && (
+        <img
+          ref={imgRef}
+          src={src}
+          alt={alt}
+          width={typeof width === 'number' ? width : 4}
+          height={typeof height === 'number' ? height : 3}
+          onLoad={handleLoad}
+          onError={handleError}
+          className={ cn( imageClasses, 
+            'absolute top-0 left-0 bottom-0 right-0 z-50'
+          )}
+          style={{ objectPosition }}
+          loading={priority ? "eager" : "lazy"}
+          srcSet={srcSet}
+          sizes={sizes}
+          {...rest}
+        />
+      )}  
     </div>
   );
 };

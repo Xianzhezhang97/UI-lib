@@ -5,11 +5,11 @@ import { Input } from '@/UI/Components/Input/Input';
 import { Slider } from '@/UI/Components/Slider/Slider';
 import { Meta, StoryObj } from '@storybook/react';
 import { useCallback, useEffect, useState } from 'react';
-import { AnimatedNumber } from './Number';
+import { Number } from './Number';
 
-const meta: Meta<typeof AnimatedNumber> = {
+const meta: Meta<typeof Number> = {
   title: 'Components/Number',
-  component: AnimatedNumber,
+  component: Number,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -214,7 +214,7 @@ import { AnimatedNumber } from './AnimatedNumber';
 
 export default meta;
 
-type Story = StoryObj<typeof AnimatedNumber>;
+type Story = StoryObj<typeof Number>;
 
 // 代码展示组件
 const CodeBlock = ({
@@ -303,7 +303,7 @@ const InteractiveDemo = (props: any) => {
       {/* 组件展示 */}
       <div className='border p-[28px] space-y-8 rounded-[28px] bg-background text-center'>
         <div className='flex items-center justify-center'>
-          <AnimatedNumber
+          <Number
             value={value}
             format={props.format}
             animation={props.animation}
@@ -502,7 +502,7 @@ export const Animation: Story = {
       },
     },
   },
-  render: (args) => <AnimatedNumber {...args} />,
+  render: (args) => <Number {...args} />,
 };
 
 export const FadeAnimation: Story = {

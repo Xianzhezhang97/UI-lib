@@ -39,7 +39,7 @@ interface AnimatedNumberProps {
   commaWidth?: string;
 }
 
-export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
+export const Number: React.FC<AnimatedNumberProps> = ({
   value,
   format = 'none',
   animation = 'slide',

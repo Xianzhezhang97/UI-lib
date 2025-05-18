@@ -12,6 +12,7 @@ export interface AvatarProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   status?: 'online' | 'offline' | 'away' | 'busy';
   bordered?: boolean;
   ring?: boolean;
+  customSize?: string;
   ringColor?: string;
   message?: number;
 }
@@ -31,6 +32,10 @@ const sizeStyles = {
   },
   xl: {
     container: 'h-12 w-12 md:h-20 md:w-20 lg:h-22 lg:w-22 xl:h-24 xl:w-24',
+    text: 'text-md md:text-lg lg:text-xl xl:text-xl',
+  },
+  custom: {
+    container: '',
     text: 'text-md md:text-lg lg:text-xl xl:text-xl',
   },
 };
@@ -55,6 +60,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
       ring = false,
       ringColor = 'ring-primary-500',
       message,
+      customSize,
       ...props
     },
     ref
@@ -76,7 +82,8 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
           }}
           className={cn(
             'relative flex items-center justify-center overflow-hidden rounded-full ',
-            sizeStyles[ size ].container,
+            size && !customSize &&sizeStyles[ size ].container,
+            customSize && customSize,
             !src && 'bg-gray-100',
             name && `text-${getContrastTextColor(getColorFromName(name))}`,
             bordered && 'border-2 border-white',
@@ -89,13 +96,17 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
             <img
               src={src}
               alt={alt || name}
-              className="h-full w-full object-cover"
+              className={cn(
+                'h-full w-full flex object-cover',
+                customSize && customSize,
+              )}
             />
           ) : name ? (
             <span
               className={cn(
                 'font-medium text-center',
                 sizeStyles[size].text,
+                customSize && customSize,
                 name && `text-${getContrastTextColor(getColorFromName(name))}`,
               )}
             >

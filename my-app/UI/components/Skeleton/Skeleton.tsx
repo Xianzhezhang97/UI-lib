@@ -152,3 +152,37 @@ export const SkeletonListItem = ({
     </div>
   );
 };
+
+
+
+interface SkeletonImageProps extends SkeletonProps {
+  aspectRatio?: 'square' | 'landscape' | 'portrait' | 'custom';
+  customRatio?: string; // e.g. "16/9"
+}
+
+export const SkeletonImage: React.FC<SkeletonImageProps> = ({
+  variant = 'image',
+  aspectRatio = 'square',
+  customRatio,
+  className,
+  ...props
+}) => {
+  const aspectRatioClasses = {
+    square: 'aspect-square',
+    landscape: 'aspect-video',
+    portrait: 'aspect-[9/16]',
+    custom: customRatio ? `aspect-[${customRatio}]` : 'aspect-square'
+  };
+
+  return (
+    <Skeleton
+      variant={variant}
+      className={cn(
+        aspectRatioClasses[aspectRatio],
+        'w-full',
+        className
+      )}
+      {...props}
+    />
+  );
+};

@@ -1,11 +1,11 @@
 // src/components/SmartImage.stories.tsx
 
 import type { Meta, StoryObj } from "@storybook/react";
-import { Imagine } from "./Imagine";
+import { ImagePro } from "./ImagePro";
 
-const meta: Meta<typeof Imagine> = {
-  title: "Components/Imagine",
-  component: Imagine,
+const meta: Meta<typeof ImagePro> = {
+  title: "Components/Image",
+  component: ImagePro,
   tags: ["autodocs"],
   argTypes: {
     width: { control: "number" },
@@ -19,7 +19,7 @@ const meta: Meta<typeof Imagine> = {
   
   decorators: [
     (Story) => (
-      <div className=" items-center p-6 w-full h-full">
+      <div className=" items-center flex w-full h-full">
                 <Story />
 
       </div>
@@ -28,11 +28,11 @@ const meta: Meta<typeof Imagine> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Imagine>;
+type Story = StoryObj<typeof Image>;
 
 const demoImage = "https://picsum.photos/1920/1080";
 const brokenImage = "https://not-exist-domain.com/image.jpg";
-const blurPlaceholder = "https://picsum.photos/id/237/20/20?blur";
+const blurPlaceholder = "https://picsum.photos/id/10/10?blur";
 
 export const Default: Story = {
   args: {
