@@ -301,7 +301,7 @@ const InteractiveDemo = (props: any) => {
   return (
     <div className='space-y-8 min-w-[600px]'>
       {/* 组件展示 */}
-      <div className='border p-6 space-y-8 rounded-[28px] bg-background text-center'>
+      <div className='border p-[28px] space-y-8 rounded-[28px] bg-background text-center'>
         <div className='flex items-center justify-center'>
           <AnimatedNumber
             value={value}
@@ -382,13 +382,13 @@ const InteractiveDemo = (props: any) => {
 
         <div className='flex items-center gap-4 w-full'>
           <Slider
-            value={[value]}
+            value={value}
             min={0}
             max={10000}
             step={1}
             // onChange={handleChange(value)}
             defaultValue={value}
-            onValueChange={(value: number[]) => handleChange(value[0])}
+            onValueChange={(value: number) => handleChange(value)}
             className='w-full'
           />
         </div>
@@ -438,6 +438,11 @@ export const Percentage: Story = {
     animation: 'slide',
     duration: 0.5,
     decimalPlaces: 2,
+    currencySymbolSize: '2em',
+    integerPartSize: '2em',
+    decimalPartSize: '2em',
+    suffixSize: '2em',
+    commaWidth: '0.2em',
     useShortFormat: false,
   },
   parameters: {
@@ -458,11 +463,11 @@ export const ShortFormat: Story = {
     duration: 0.5,
     decimalPlaces: 1,
     maxNumberPlaces: 3,
-    currencySymbolSize: '1em',
-    integerPartSize: '1.2em',
-    decimalPartSize: '1.2em',
-    suffixSize: '',
-    commaWidth: '',
+    currencySymbolSize: '2em',
+    integerPartSize: '2em',
+    decimalPartSize: '2em',
+    suffixSize: '2em',
+    commaWidth: '0.2em',
   },
   parameters: {
     docs: {
@@ -525,6 +530,11 @@ export const ScientificNotation: Story = {
     animation: 'slide',
     duration: 0.5,
     decimalPlaces: 2,
+    currencySymbolSize: '2em',
+    integerPartSize: '2em',
+    decimalPartSize: '2em',
+    suffixSize: '2em',
+    commaWidth: '0.2em',
   },
   parameters: {
     docs: {
@@ -543,6 +553,11 @@ export const EngineeringNotation: Story = {
     animation: 'slide',
     duration: 0.5,
     decimalPlaces: 2,
+    currencySymbolSize: '2em',
+    integerPartSize: '2em',
+    decimalPartSize: '2em',
+    suffixSize: '2em',
+    commaWidth: '0.2em',
   },
   parameters: {
     docs: {
