@@ -1,7 +1,7 @@
+import { cn } from '@/UI/utils/cn';
+import { HTMLMotionProps, motion } from 'framer-motion';
+import { Check } from 'lucide-react';
 import React from 'react';
-import { motion, HTMLMotionProps } from 'framer-motion';
-import { cn } from '@/utils/cn';
-import { CheckIcon } from '@heroicons/react/24/outline';
 
 export interface CheckboxProps extends Omit<HTMLMotionProps<'div'>, 'children' | 'onChange'> {
   label?: string;
@@ -108,7 +108,7 @@ export const Checkbox = React.forwardRef<HTMLDivElement, CheckboxProps>(
               }}
               transition={{ duration: 0.15 }}
             >
-              <CheckIcon
+              <Check 
                 className={cn(
                   'text-white',
                   sizeStyles[size].icon

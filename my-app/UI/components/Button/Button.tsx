@@ -1,6 +1,7 @@
-import { cn } from '@/utils/cn';
 import { HTMLMotionProps, motion } from 'framer-motion';
+import { Loader } from 'lucide-react';
 import React from 'react';
+import { cn } from '~/utils/cn';
 
 export interface ButtonProps
   extends Omit<HTMLMotionProps<'button'>, 'children'> {
@@ -12,12 +13,14 @@ export interface ButtonProps
     | 'icon'
     | 'link'
     | 'full';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'noPadding';
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   fullWidth?: boolean;
   children?: React.ReactNode;
+  disabled?: boolean;
+  isPadding?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -27,35 +30,41 @@ const variantStyles = {
     text-white 
     hover:bg-primary-500 
     active:bg-primary-600 
-    transition-all 
     rounded-full
   `,
 
   secondary: `
-    bg-primary-100 
-    text-primary-700 
-    hover:bg-primary-200 
-    active:bg-primary-300 
+    bg-gray-50 
+    text-primary-900 
+    hover:bg-primary-100 
+    active:bg-primary-200 
     rounded-full 
-    transition-all
+    
   `,
 
   outline: `
-    border border-primary-500 
-    text-primary-500 
-    hover:bg-primary-500
+    border border-primary-700 
+    text-primary-700 
+    hover:bg-primary-700
     hover:text-white
-    active:bg-primary-100 
+    active:bg-primary-600 
     rounded-full 
-    transition-all
+    
   `,
 
   ghost: `
-    text-primary-600 
-    hover:bg-primary-50 
+    text-primary-900 
+    hover:bg-primary-50
+    group-hover:bg-primary-50
+    group-hover:text-white
     active:bg-primary-100 
     rounded-full 
-    transition-all
+    
+  `,
+
+  icon: `
+    rounded-full 
+    
   `,
 
   link: `
@@ -63,7 +72,7 @@ const variantStyles = {
     underline-offset-4 
     hover:underline 
     hover:text-primary-700 
-    rounded-full
+    
   `,
 
   full: `
@@ -73,45 +82,39 @@ const variantStyles = {
     hover:bg-primary-600 
     active:bg-primary-700 
     rounded-full 
-    transition-all
-  `,
-
-  icon: `
-    w-10 h-10
-    hover:bg-primary-50
-    active:bg-primary-100 
-    rounded-full 
-    transition-all
+    
   `,
 };
 
 const sizeStyles = {
   sm: `
-    px-4 py-1.5 
+    px-1 py-1.5 
     text-sm 
-    rounded-full
-    h-8 min-w-[96px]
+    h-8 
     sm:text-sm 
     sm:px-3 sm:py-1
   `,
 
   md: `
-    px-6 py-2 
+    px-2 py-2 
     text-base
-    h-10 min-w-[96px]
+    h-10 
     rounded-full 
     sm:px-4 sm:py-2
-    sm:text-sm
   `,
-
   lg: `
-    px-8 py-3 
+    px-3 py-3 
     text-lg
-    rounded-full
-    h-12 min-w-[96px] 
+    h-12
     flex items-center justify-center 
     sm:px-6 sm:py-2.5 
     sm:text-base
+  `,
+  noPadding: `
+    ratio-1/1
+    p-2
+    text-base
+    rounded-full 
   `,
 };
 
@@ -120,13 +123,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     {
       className,
       variant = 'primary',
-      size = 'md',
+      size = 'lg',
       isLoading = false,
       leftIcon,
       rightIcon,
       fullWidth = false,
       children,
       disabled,
+      isPadding = true,
       onClick,
       ...props
     },
@@ -140,44 +144,27 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <motion.button
-        ref={ref}
+        ref={ ref }
+        layout
+        whileTap={ { scale: 0.99 } }
+        whileHover={ { scale: 1.01 } }
+        transition={ { duration: 0.3, type: 'spring', stiffness: 100, damping: 10,bounce: 0.2 } }
         className={cn(
-          'inline-flex items-center gap-2 justify-center font-medium transition-colors focus:outline-none disabled:pointer-events-none disabled:opacity-50',
+          'flex items-center justify-center font-medium  focus:outline-none disabled:cursor-not-allowed disabled:opacity-70',
           variantStyles[variant],
-          sizeStyles[size],
           fullWidth && 'w-full',
           className,
         )}
         disabled={disabled || isLoading}
         onClick={handleClick}
-        whileTap={{ scale: 0.98 }}
         {...props}
       >
-        {isLoading && (
-          <svg
-            className='mr-2 h-4 w-4 animate-spin'
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
-          >
-            <circle
-              className='opacity-25'
-              cx='12'
-              cy='12'
-              r='10'
-              stroke='currentColor'
-              strokeWidth='4'
-            />
-            <path
-              className='opacity-75'
-              fill='currentColor'
-              d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
-            />
-          </svg>
-        )}
-        {!isLoading && leftIcon && <span className=''>{leftIcon}</span>}
-        {children}
-        {!isLoading && rightIcon && <span className=''>{rightIcon}</span>}
+        <div className={ cn( 'inline-flex items-center ratio-1/1',
+        ) }>
+          { isPadding && <div className='p-3'>{ isLoading ? ( <div className='animate-spin'><Loader /></div> ) : leftIcon && <span className=''>{ leftIcon }</span> }</div> }
+         <div className={cn('flex items-center justify-center ', sizeStyles[size])}>{children}</div>
+          { isPadding && <div className='p-3'>{rightIcon && <span className=''>{rightIcon}</span>}</div> }
+        </div>
       </motion.button>
     );
   },

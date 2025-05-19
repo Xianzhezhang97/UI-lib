@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/UI/utils/cn';
 import { motion as m, useInView } from 'framer-motion';
 import React, { useRef } from 'react';
 
@@ -47,7 +47,6 @@ const ChartWrapper = ({
       <div className={ cn( 'w-full h-full', sizeStyles[ size ], 'overflow-hidden' ) } style={ { position: 'relative' } }>
           { isInView && 
           <m.div
-            title={title? title:undefined}
             initial={{ opacity: 0 ,y: 20 }}
             animate={{ opacity: 1 ,y: 0}}
             exit={{ opacity: 0 }}

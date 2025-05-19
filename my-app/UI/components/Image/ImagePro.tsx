@@ -1,4 +1,4 @@
-import { cn } from "@/utils/cn";
+import { cn } from "@/UI/utils/cn";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { CircularProgress } from "../Progress/CircularProgress";
 import { SkeletonImage } from "../Skeleton/Skeleton";

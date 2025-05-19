@@ -1,13 +1,13 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/UI/utils/cn';
+import { HTMLMotionProps, motion } from 'framer-motion';
 import
   {
-    CheckCircleIcon,
-    ExclamationCircleIcon,
-    ExclamationTriangleIcon,
-    InformationCircleIcon,
-    XMarkIcon,
-  } from '@heroicons/react/24/outline';
-import { HTMLMotionProps, motion } from 'framer-motion';
+    BookmarkCheck,
+    CircleAlert,
+    Info,
+    ShieldAlert,
+    X,
+  } from 'lucide-react';
 import React from 'react';
 import { Card } from '../Card/Card';
 import { Typography } from '../Typography/Typography';
@@ -45,10 +45,10 @@ const variantStyles = {
 };
 
 const defaultIcons = {
-  info: <InformationCircleIcon className='h-6 w-6' />,
-  success: <CheckCircleIcon className='h-6 w-6' />,
-  warning: <ExclamationTriangleIcon className='h-6 w-6' />,
-  error: <ExclamationCircleIcon className='h-6 w-6' />,
+  info: <Info />,
+  success: <BookmarkCheck />,
+  warning: <CircleAlert />,
+  error: <ShieldAlert />,
 };
 
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
@@ -109,7 +109,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
                 )}
                 onClick={onClose}
               >
-                <XMarkIcon className='h-5 w-5' />
+                <X />
               </button>
             </div>
           )}

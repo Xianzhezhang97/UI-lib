@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/UI/utils/cn';
 import React from 'react';
 
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';

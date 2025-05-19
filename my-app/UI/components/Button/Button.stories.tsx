@@ -1,5 +1,6 @@
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { withAnimation } from '@/.storybook/decorators/animation';
 import type { Meta, StoryObj } from '@storybook/react';
+import { ChevronRight, Plus } from 'lucide-react';
 import { Button } from './Button';
 
 const meta: Meta<typeof Button> = {
@@ -8,11 +9,12 @@ const meta: Meta<typeof Button> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
+  tags: [ 'autodocs' ],
+  decorators: [withAnimation],
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'outline', 'ghost', 'link'],
+      options: ['primary', 'secondary', 'outline', 'ghost', 'link', 'full'],
     },
     size: {
       control: 'select',
@@ -63,8 +65,10 @@ export const Ghost: Story = {
 
 export const Link: Story = {
   args: {
-    children: 'Button',
+    children: 'Link',
     variant: 'link',
+    isPadding: false,
+    size: 'noPadding',
   },
 };
 
@@ -89,33 +93,53 @@ export const Large: Story = {
   },
 };
 
+export const IconWithPrimary: Story = {
+  args: {
+    children: <Plus width={30} height={30} />,
+    variant: 'primary',
+    isPadding: false,
+    size: 'noPadding',
+  },
+};
+
+export const IconWithSecondary: Story = {
+  args: {
+    children: <Plus width={30} height={30}/>,
+    variant: 'secondary',
+    isPadding: false,
+    size: 'noPadding',
+  },
+};
+
+export const IconWithOutline: Story = {
+  args: {
+    children: <Plus width={30} height={30} />,
+    variant: 'outline',
+    isPadding: false,
+    size: 'noPadding',
+  },
+};
+
+export const IconWithGhost: Story = {
+  args: {
+    children: <Plus width={30} height={30} />,
+    variant: 'ghost',
+    isPadding: false,
+    size: 'noPadding',
+  },
+};
+
 export const WithLeftIcon: Story = {
   args: {
     children: 'Add Item',
-    leftIcon: <PlusIcon className='h-5 w-5' />,
+    leftIcon: <Plus />,
   },
 };
 
 export const WithRightIcon: Story = {
   args: {
     children: 'Next',
-    rightIcon: (
-      <svg
-        width='24'
-        height='24'
-        viewBox='0 0 24 24'
-        fill='none'
-        xmlns='http://www.w3.org/2000/svg'
-      >
-        <path
-          d='M9 6L15 12L9 18'
-          stroke='currentColor'
-          stroke-width='2'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-        />
-      </svg>
-    ),
+    rightIcon: <ChevronRight />,
   },
 };
 
@@ -128,6 +152,7 @@ export const Loading: Story = {
 
 export const Disabled: Story = {
   args: {
+    size: 'lg',
     children: 'Disabled',
     disabled: true,
   },
@@ -135,6 +160,7 @@ export const Disabled: Story = {
 
 export const FullWidth: Story = {
   args: {
+    size: 'lg',
     children: 'Full Width Button',
     fullWidth: true,
   },

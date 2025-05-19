@@ -1,5 +1,5 @@
-import type { Preview } from "@storybook/react";
-import '../src/index.css';
+import type { Preview } from '@storybook/react';
+import './index.css';
 
 const preview: Preview = {
   parameters: {
@@ -10,7 +10,10 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
+    nextjs: {
+      appDirectory: true,
+    },
   },
 };
 
-export default preview; 
+export default preview;

@@ -1,5 +1,5 @@
 import { ViewportAnimation } from '@/UI/Animation/ViewportAnimation';
-import { cn } from '@/utils/cn';
+import { cn } from '@/UI/utils/cn';
 import { motion } from 'framer-motion';
 import React from 'react';
 

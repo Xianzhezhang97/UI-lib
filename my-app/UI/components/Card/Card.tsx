@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/UI/utils/cn';
 import { HTMLMotionProps, motion } from 'framer-motion';
 import React from 'react';
 
@@ -15,10 +15,10 @@ const variantStyles = {
 };
 
 const sizeStyles = {
-  sm: 'p-[20px] rounded-[14px]',
-  md: 'p-[20px] md:p-[28px] rounded-[14px] md:rounded-[28px]',
-  lg: 'p-[20px] md:p-[28px] lg:p-[30px] rounded-[14px] md:rounded-[28px] lg:rounded-[42px]',
-  xl: 'p-[20px] md:p-[28px] lg:p-[30px] xl:p-[40px] rounded-[14px] md:rounded-[28px] lg:rounded-[42px] xl:rounded-[56px]',
+  sm: 'p-[14px] rounded-[14px]',
+  md: 'p-[14px] rounded-[14px] md:p-[28px] md:rounded-[28px]',
+  lg: 'p-[14px] rounded-[14px] md:p-[28px] md:rounded-[28px] lg:p-[42px] lg:rounded-[42px]',
+  xl: 'p-[14px] rounded-[14px] md:p-[28px] md:rounded-[28px] lg:p-[42px] lg:rounded-[42px] xl:p-[56px] xl:rounded-[56px]',
 };
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(

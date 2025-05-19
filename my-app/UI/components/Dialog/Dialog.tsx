@@ -1,7 +1,7 @@
+import { cn } from '@/UI/utils/cn';
+import { HTMLMotionProps, motion } from 'framer-motion';
+import { X } from 'lucide-react';
 import React from 'react';
-import { motion, HTMLMotionProps } from 'framer-motion';
-import { cn } from '@/utils/cn';
-import { XMarkIcon } from '@heroicons/react/24/outline';
 
 export interface DialogProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   open?: boolean;
@@ -66,7 +66,7 @@ export const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
                   className="absolute right-4 top-4 rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
                   onClick={onClose}
                 >
-                  <XMarkIcon className="h-5 w-5" />
+                  <X />
                 </button>
               )}
               {title && (

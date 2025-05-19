@@ -1,6 +1,5 @@
+import { cn } from '@/UI/utils/cn';
 import React from 'react';
-import { cn } from '@/utils/cn';
-import { motion } from 'framer-motion';
 
 export type TypographyVariant = 
   | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'

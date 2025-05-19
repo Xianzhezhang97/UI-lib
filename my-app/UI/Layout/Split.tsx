@@ -1,5 +1,5 @@
+import { cn } from '@/UI/utils/cn';
 import React from 'react';
-import { cn } from '@/utils/cn';
 
 interface SplitProps extends React.HTMLAttributes<HTMLDivElement> {
   direction?: 'horizontal' | 'vertical';

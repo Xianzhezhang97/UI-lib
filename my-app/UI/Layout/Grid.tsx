@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/UI/utils/cn';
 import React from 'react';
 
 interface GridProps extends React.HTMLAttributes<HTMLDivElement> {

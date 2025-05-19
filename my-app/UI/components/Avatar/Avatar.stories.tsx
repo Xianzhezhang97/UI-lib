@@ -1,11 +1,14 @@
 // Avatar.stories.tsx
+import { withAnimation } from '@/.storybook/decorators/animation';
 import { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
 import { Avatar } from './Avatar';
 
 const meta: Meta<typeof Avatar> = {
   title: 'Components/Avatar',
   component: Avatar,
-  tags: ['autodocs'],
+  tags: [ 'autodocs' ],
+  decorators: [withAnimation],
   parameters: {
     layout: 'centered',
     docs: {

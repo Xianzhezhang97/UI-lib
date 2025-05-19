@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/UI/utils/cn';
 import React, { useEffect, useRef, useState } from 'react';
 import { Digit } from './components/Digit';
 import { formatNumber } from './util/formatNumber';

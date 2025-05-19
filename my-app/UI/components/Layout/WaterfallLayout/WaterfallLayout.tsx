@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/UI/utils/cn';
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 
 export interface WaterfallLayoutProps {

@@ -1,7 +1,6 @@
-import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import { EyeOff, Search } from 'lucide-react';
 import { Input } from './Input';
-import { MagnifyingGlassIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 const meta: Meta<typeof Input> = {
   title: 'Components/Input',
@@ -90,7 +89,7 @@ export const WithLeftIcon: Story = {
   args: {
     label: 'Search',
     placeholder: 'Search...',
-    leftElement: <MagnifyingGlassIcon className="h-5 w-5" />,
+    leftElement: <Search />,
   },
 };
 
@@ -99,7 +98,7 @@ export const WithRightIcon: Story = {
     label: 'Password',
     type: 'password',
     placeholder: 'Enter your password',
-    rightElement: <EyeIcon className="h-5 w-5" />,
+    rightElement: <EyeOff />,
   },
 };
 

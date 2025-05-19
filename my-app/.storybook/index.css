@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities; 
+h1 {
+  @apply flex font-bold mb-6 tracking-wider w-full text-[1.4em] justify-start items-center;
+}
+
+h2 {
+  @apply flex font-medium my-8 mt-4 text-lg tracking-tight w-full  justify-start items-center;
+}
+
+h3 {
+  @apply font-bold text-base mb-1 tracking-normal;
+}
+
+h4 {
+  @apply font-semibold  my-2 text-base tracking-wide;
+}
+
+p {
+  @apply text-sm tracking-tight;
+}
+
+.start {
+  @apply flex justify-start items-center;
+}
+
+.end {
+  @apply flex justify-end items-center;
+}
+
+.center {
+  @apply flex justify-center items-center;
+}
+
+.col {
+  @apply flex flex-col;
+}
+
+.row {
+  @apply flex flex-row;
+}
+
+.grid-gap {
+  @apply gap-2 md:gap-4 lg:gap-6 xl:gap-8;
+}
+
+.py-sm {
+@apply py-[14px];
+}
+.px-sm {
+@apply px-[14px];
+}
+
+
+.py-md {
+@apply py-[14px] md:py-[28px];
+}
+
+.px-md {
+@apply px-[14px] md:px-[28px];
+}
+
+.pt-md {
+@apply pt-[14px] md:pt-[28px];
+}
+
+.pt-lg {
+@apply pt-[14px] md:pt-[28px] lg:pt-[42px];
+}
+
+.pt-xl {
+@apply pt-[14px] md:pt-[28px] lg:pt-[42px] xl:pt-[56px];
+}
+
+.pt-2xl {
+@apply pt-[14px] md:pt-[28px] lg:pt-[42px] xl:pt-[56px];
+}
+
+.pb-md {
+@apply pb-[14px] md:pb-[28px];
+}
+
+.px-lg {
+@apply px-[14px] md:px-[28px] lg:px-[42px];
+}
+
+.py-lg {
+@apply py-[14px] md:py-[28px] lg:py-[42px];
+}
+
+.py-xl {
+@apply py-[14px] md:py-[28px] lg:py-[42px] xl:py-[56px];
+}
+
+.px-xl {
+@apply px-[14px] md:px-[28px] lg:px-[42px] xl:px-[56px];
+}
+
+.rd-sm {
+@apply rounded-[14px] overflow-hidden;
+}
+
+.rd-md {
+@apply rounded-[14px] md:rounded-[28px] overflow-hidden;
+}
+
+.rd-lg {
+@apply rounded-[14px] md:rounded-[28px] lg:rounded-[42px] overflow-hidden;
+}
+
+.rd-xl {
+@apply rounded-[14px] md:rounded-[28px] lg:rounded-[42px] xl:rounded-[56px] overflow-hidden;
+} 

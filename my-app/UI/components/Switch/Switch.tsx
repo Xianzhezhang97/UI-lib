@@ -1,6 +1,6 @@
+import { cn } from '@/UI/utils/cn';
+import { HTMLMotionProps, motion } from 'framer-motion';
 import React from 'react';
-import { motion, HTMLMotionProps } from 'framer-motion';
-import { cn } from '@/utils/cn';
 
 export interface SwitchProps extends Omit<HTMLMotionProps<'div'>, 'children' | 'onChange'> {
   label?: string;

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { cn } from '@/UI/utils/cn';
 import { motion } from 'framer-motion';
-import { cn } from '@/utils/cn';
-import Digit from './Digit';
-import { formatNumberValue } from '../utils/numberFormatters';
+import React, { useEffect, useState } from 'react';
 import { AnimatedNumberProps } from '../types';
+import { formatNumberValue } from '../utils/numberFormatters';
+import Digit from './Digit';
 
 /**
  * Simple AnimatedNumber Component

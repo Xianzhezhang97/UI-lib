@@ -17,7 +17,7 @@ const meta: Meta<typeof Animate> = {
       },
     },
   },
-  tags: ['autodocs'],
+  tags: [ 'autodocs' ],
   argTypes: {
     type: {
       control: 'select',
@@ -46,7 +46,7 @@ const meta: Meta<typeof Animate> = {
     },
     timing: {
       control: 'select',
-      options: ['ease', 'linear', 'ease-in', 'ease-out', 'ease-in-out'],
+      options: [ 'ease', 'linear', 'ease-in', 'ease-out', 'ease-in-out' ],
     },
     repeat: {
       control: { type: 'number', min: 0, max: 10, step: 1 },
@@ -218,7 +218,7 @@ export const Combined: Story = {
         type='fade'
         whileHover='scale'
         whileTap='bounce'
-        duration={0.3}
+        duration={ 0.3 }
       >
         <div className='p-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg text-white'>
           <Typography
@@ -231,7 +231,7 @@ export const Combined: Story = {
         type='slide-up'
         whileHover='rotate'
         whileTap='shake'
-        duration={0.3}
+        duration={ 0.3 }
       >
         <div className='p-6 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg text-white'>
           <Typography
@@ -266,7 +266,7 @@ export const Special: Story = {
       </Animate>
       <Animate
         type='pulse'
-        repeat={Infinity}
+        repeat={ Infinity }
       >
         <div className='p-4 bg-indigo-100 rounded-lg'>
           <Typography
@@ -292,15 +292,15 @@ export const AnimateComponent: Story = {
         className='overflow-x-auto'
       >
         <VibrantAnimation className='flex gap-4'>
-          {Array.from({ length: 24 }).map((_, index) => (
+          { Array.from( { length: 24 } ).map( ( _, index ) => (
             <Card
-              key={index}
+              key={ index }
               variant='filled'
               className='p-8 my-8'
             >
-              {index + 1}
+              { index + 1 }
             </Card>
-          ))}
+          ) ) }
         </VibrantAnimation>
       </Container>
       <Typography
@@ -308,15 +308,15 @@ export const AnimateComponent: Story = {
         content='Vibrant Animation'
       />
       <VibrantAnimation className='grid grid-cols-12 gap-4 w-full'>
-        {Array.from({ length: 12 }).map((_, index) => (
+        { Array.from( { length: 12 } ).map( ( _, index ) => (
           <Card
-            key={index}
+            key={ index }
             variant='filled'
             className='p-8 flex justify-center items-center col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2'
           >
-            {index + 1}
+            { index + 1 }
           </Card>
-        ))}
+        ) ) }
       </VibrantAnimation>
     </div>
   ),

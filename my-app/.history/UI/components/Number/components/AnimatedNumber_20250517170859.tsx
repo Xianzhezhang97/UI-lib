@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/UI/utils/cn';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { AnimatedNumberProps, FormattedNumberParts } from '../types';

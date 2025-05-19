@@ -1,11 +1,10 @@
-import { cn } from '@/utils/cn';
-import React, { useEffect, useState } from 'react';
+import { cn } from '@/UI/utils/cn';
 import { motion } from 'framer-motion';
-import Digit from './Digit';
-import { formatNumber } from '../utils/formatters';
-import { variants } from '../utils/animationVariants';
+import React, { useEffect, useState } from 'react';
 import { AnimatedNumberProps, FormattedNumberParts } from '../types';
-import { parseFormattedNumber } from '../utils/formatters';
+import { variants } from '../utils/animationVariants';
+import { formatNumber, parseFormattedNumber } from '../utils/formatters';
+import Digit from './Digit';
 
 /**
  * AnimatedNumber Component
