@@ -90,7 +90,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>( ( {
       </motion.div>
 
       { message !== undefined && (
-        <span className="absolute -top-[12px] -right-[12px] md:-top-[6px] md:-right-[6px] xl:-top-[8px] xl:-right-[8px]">
+        <span className="absolute -top-[0.5em] -right-[0.5em]">
           <div className="inline-flex h-5 px-1 rounded-full border-2 border-white bg-gradient-to-r from-red-500 to-red-300 items-center justify-center">
             <div className="px-1 text-white text-xs font-semibold">{ message < 100 ? message : '99+' }</div>
           </div>

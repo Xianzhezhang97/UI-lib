@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { userEvent, within } from '@storybook/testing-library';
 import { Settings, X } from 'lucide-react';
 import { Accordion } from './Accordion';
+import doc from './Accordion.md';
 
 const meta = {
   title: 'Components/Accordion',
@@ -10,10 +11,15 @@ const meta = {
   parameters: {
     layout: 'centered',
     header: 'Accordion',
+    docs: {
+      description: {
+        component: doc.toString(),
+      },
+    },
   },
-  tags: [ 'autodocs' ],
+  tags: ['autodocs'],
 
-  decorators: [ withAnimation ],
+  decorators: [withAnimation],
 
   argTypes: {
     title: {
@@ -60,8 +66,6 @@ const meta = {
   },
 } satisfies Meta<typeof Accordion>;
 
-
-
 export default meta;
 type Story = StoryObj<typeof Accordion>;
 
@@ -74,16 +78,12 @@ export const Default: Story = {
   parameters: {
     header: 'Default',
   },
-  play: async ( { canvasElement } ) =>
-  {
-    const canvas = within( canvasElement );
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
 
-    const header = await canvas.getByText( 'Accordion Title' );
-    await userEvent.click( header );
-
-
+    const header = await canvas.getByText('Accordion Title');
+    await userEvent.click(header);
   },
-
 };
 
 export const WithCustomIcon: Story = {
@@ -120,7 +120,8 @@ export const WithCustomStyling: Story = {
   },
   parameters: {
     header: 'Custom Styling',
-    description: 'This accordion has custom styling applied to its header, content, and icon container.',
+    description:
+      'This accordion has custom styling applied to its header, content, and icon container.',
   },
 };
 
@@ -174,17 +175,17 @@ export const Disabled: Story = {
 
 export const Controlled: Story = {
   args: {
-    title: 'Controlled Accordion',
-    isOpen: false,
-    onChange: ( isOpen ) =>
-      console.log( `Accordion is now ${ isOpen ? 'open' : 'closed' }` ),
-    children: 'This accordion is controlled by the parent component.',
+    title: 'Controlled by React State',
+    isOpen: true,
+    onChange: (isOpen) =>
+      console.log(`Accordion is now ${isOpen ? 'open' : 'closed'}`),
+    children:
+      'The parent component controls this accordion. So you can use the parent component to manage the state, like you can put a few Accordion components, and only allow the user to open one at once.',
   },
   parameters: {
     header: 'Controlled',
     description: 'This accordion is controlled by the parent component.',
   },
-
 };
 
 export const WithMultipleSections: Story = {
@@ -201,7 +202,7 @@ export const WithMultipleSections: Story = {
       </Accordion>
       <Accordion
         title='Third Section with Custom Icon'
-        icon={ <X className='h-5 w-5 text-gray-500' /> }
+        icon={<X className='h-5 w-5 text-gray-500' />}
       >
         <p>This section has a custom info icon.</p>
       </Accordion>
@@ -214,7 +215,6 @@ export const WithMultipleSections: Story = {
 };
 
 export const WithReducedMotion: Story = {
-
   args: {
     title: 'Reduced Motion',
     children: 'This accordion respects the reduced motion preference.',

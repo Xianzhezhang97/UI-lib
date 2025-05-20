@@ -2,6 +2,7 @@ import { withAnimation } from '@/.storybook/decorators/animation';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ChevronRight, Plus } from 'lucide-react';
 import { Button } from './Button';
+import doc from './Button.md';
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -9,8 +10,8 @@ const meta: Meta<typeof Button> = {
   parameters: {
     layout: 'centered',
     docs: {
-      source: {
-        type: 'code', // or 'dynamic'
+      description: {
+        component: doc.toString(),
       },
     },
   },
@@ -48,6 +49,12 @@ export const Primary: Story = {
   },
   parameters: {
     viewMode: 'docs',
+    header: 'Primary',
+    docs: {
+      description: {
+        story: 'Primary button variant',
+      },
+    },
   },
 };
 
@@ -55,6 +62,9 @@ export const Secondary: Story = {
   args: {
     children: 'Button',
     variant: 'secondary',
+  },
+  parameters: {
+    viewMode: 'docs',
   },
 };
 

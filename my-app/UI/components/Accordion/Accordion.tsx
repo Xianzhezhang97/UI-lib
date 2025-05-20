@@ -3,7 +3,8 @@ import { HTMLMotionProps, motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 
-export interface AccordionProps extends Omit<HTMLMotionProps<'div'>, 'children' | 'onChange'> {
+export interface AccordionProps extends Omit<HTMLMotionProps<'div'>, 'children' | 'onChange'>
+{
   /** The title of the accordion header */
   title: string;
   /** The content to be displayed when expanded */
@@ -13,7 +14,7 @@ export interface AccordionProps extends Omit<HTMLMotionProps<'div'>, 'children' 
   /** Controlled open state */
   isOpen?: boolean;
   /** Callback when the open state changes */
-  onChange?: (isOpen: boolean) => void;
+  onChange?: ( isOpen: boolean ) => void;
   /** Whether the accordion is disabled */
   disabled?: boolean;
   /** Custom icon to replace the default chevron */
@@ -36,7 +37,7 @@ const contentVariants = {
     height: 'auto',
     opacity: 1,
     transition: {
-      height: { ease: [0.22, 1, 0.36, 1] },
+      height: { ease: [ 0.22, 1, 0.36, 1 ] },
       opacity: { ease: 'easeIn' }
     }
   },
@@ -44,7 +45,7 @@ const contentVariants = {
     height: 0,
     opacity: 0,
     transition: {
-      height: { ease: [0.22, 1, 0.36, 1] },
+      height: { ease: [ 0.22, 1, 0.36, 1 ] },
       opacity: { ease: 'easeOut' }
     }
   }
@@ -75,44 +76,51 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(
       ...props
     },
     ref
-  ) => {
+  ) =>
+  {
     const isControlled = controlledIsOpen !== undefined;
-    const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(defaultOpen);
+    const [ uncontrolledIsOpen, setUncontrolledIsOpen ] = useState( defaultOpen );
     const isOpen = isControlled ? controlledIsOpen : uncontrolledIsOpen;
-    const contentRef = useRef<HTMLDivElement>(null);
+    const contentRef = useRef<HTMLDivElement>( null );
     const headerId = useId();
     const contentId = useId();
     const shouldReduceMotion = useReducedMotion();
     const animationDuration = shouldReduceMotion ? 0 : duration;
 
     // Toggle the accordion open/close state
-    const toggleOpen = useCallback(() => {
-      if (disabled) return;
-      
+    const toggleOpen = useCallback( () =>
+    {
+      if ( disabled ) return;
+
       const newValue = !isOpen;
-      if (!isControlled) {
-        setUncontrolledIsOpen(newValue);
+      if ( !isControlled )
+      {
+        setUncontrolledIsOpen( newValue );
       }
-      onChange?.(newValue);
-    }, [disabled, isOpen, isControlled, onChange]);
+      onChange?.( newValue );
+    }, [ disabled, isOpen, isControlled, onChange ] );
 
     // Handle keyboard navigation
-    const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' || e.key === ' ') {
+    const handleKeyDown = useCallback( ( e: React.KeyboardEvent ) =>
+    {
+      if ( e.key === 'Enter' || e.key === ' ' )
+      {
         e.preventDefault();
         toggleOpen();
       }
-    }, [toggleOpen]);
+    }, [ toggleOpen ] );
 
     // Update content height when open state changes
-    useEffect(() => {
-      if (isOpen && contentRef.current) {
-        contentRef.current.style.height = `${contentRef.current.scrollHeight}px`;
+    useEffect( () =>
+    {
+      if ( isOpen && contentRef.current )
+      {
+        contentRef.current.style.height = `${ contentRef.current.scrollHeight }px`;
       }
-    }, [isOpen]);
+    }, [ isOpen ] );
 
     // Update animation variants with dynamic duration
-    const getContentVariants = useCallback(() => ({
+    const getContentVariants = useCallback( () => ( {
       ...contentVariants,
       open: {
         ...contentVariants.open,
@@ -128,11 +136,12 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(
           opacity: { duration: animationDuration * 0.3, ...contentVariants.closed.transition.opacity }
         }
       }
-    }), [animationDuration]);
+    } ), [ animationDuration ] );
 
     // Calculate header classes
     const headerClasses = cn(
       !quickOpenClose && !disabled && 'cursor-pointer group',
+      disabled && 'cursor-not-allowed',
       !headerClassName && [
         'flex w-full items-center justify-between gap-8',
         'px-md py-sm md:text-md lg:text-lg text-base font-medium text-gray-900',
@@ -164,48 +173,48 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(
 
     return (
       <div
-        ref={ref}
-        onClick={quickOpenClose ? toggleOpen : undefined}
-        className={containerClasses}
+        ref={ ref }
+        onClick={ quickOpenClose ? toggleOpen : undefined }
+        className={ containerClasses }
         role="region"
-        aria-labelledby={headerId}
-        // {...props}
+        aria-labelledby={ headerId }
+      // {...props}
       >
         <div
-          id={headerId}
+          id={ headerId }
           role="button"
-          tabIndex={disabled ? -1 : 0}
-          aria-expanded={isOpen}
-          aria-controls={contentId}
-          aria-disabled={disabled}
-          onClick={quickOpenClose ? undefined : toggleOpen}
-          onKeyDown={handleKeyDown}
-          className={headerClasses}
+          tabIndex={ disabled ? -1 : 0 }
+          aria-expanded={ isOpen }
+          aria-controls={ contentId }
+          aria-disabled={ disabled }
+          onClick={ quickOpenClose ? undefined : toggleOpen }
+          onKeyDown={ handleKeyDown }
+          className={ headerClasses }
         >
-          <span className={cn("", headerClassName)}>{title}</span>
+          <span className={ cn( "", headerClassName ) }>{ title }</span>
           <motion.div
             aria-hidden="true"
-            variants={iconVariants}
-            initial={false}
-            animate={isOpen ? 'open' : 'closed'}
-            transition={{ duration: animationDuration, ease: [0.22, 1, 0.36, 1] }}
-            className={iconContainerClasses}
+            variants={ iconVariants }
+            initial={ false }
+            animate={ isOpen ? 'open' : 'closed' }
+            transition={ { duration: animationDuration, ease: [ 0.22, 1, 0.36, 1 ] } }
+            className={ iconContainerClasses }
           >
-            {icon || <ChevronDown className="text-gray-500" />}
+            { icon || <ChevronDown className="text-gray-500" /> }
           </motion.div>
         </div>
-        
+
         <motion.div
-          id={contentId}
-          ref={contentRef}
-          initial={false}
-          animate={isOpen ? 'open' : 'closed'}
-          variants={getContentVariants()}
-          className={contentContainerClasses}
-          style={{ overflow: 'hidden' }}
+          id={ contentId }
+          ref={ contentRef }
+          initial={ false }
+          animate={ isOpen ? 'open' : 'closed' }
+          variants={ getContentVariants() }
+          className={ contentContainerClasses }
+          style={ { overflow: 'hidden' } }
         >
           <div className="text-sm text-gray-500 px-md pb-md">
-            {children}
+            { children }
           </div>
         </motion.div>
       </div>

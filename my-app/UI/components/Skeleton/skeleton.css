@@ -28,5 +28,5 @@
     rgba(255, 255, 255, 0) 100%
   );
   will-change: transform;
-  animation: skeleton-shimmer 0.5s infinite;
+  animation: skeleton-shimmer 1s infinite ;
 }
