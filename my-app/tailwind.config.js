@@ -5,6 +5,11 @@ module.exports = {
     './UI/**/*.{js,ts,jsx,tsx,mdx}',
     './.storybook/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    {
+      pattern: /ring-\[\#.*\]/,
+    },
+  ],
   theme: {
     extend: {
       colors: {

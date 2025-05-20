@@ -8,17 +8,23 @@ const meta: Meta<typeof Button> = {
   component: Button,
   parameters: {
     layout: 'centered',
+    docs: {
+      source: {
+        type: 'code', // or 'dynamic'
+      },
+    },
   },
   tags: [ 'autodocs' ],
-  decorators: [withAnimation],
+
+  decorators: [ withAnimation ],
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'outline', 'ghost', 'link', 'full'],
+      options: [ 'primary', 'secondary', 'outline', 'ghost', 'link', 'full' ],
     },
     size: {
       control: 'select',
-      options: ['sm', 'md', 'lg'],
+      options: [ 'sm', 'md', 'lg' ],
     },
     disabled: {
       control: 'boolean',
@@ -39,6 +45,9 @@ export const Primary: Story = {
   args: {
     children: 'Button',
     variant: 'primary',
+  },
+  parameters: {
+    viewMode: 'docs',
   },
 };
 
@@ -95,7 +104,7 @@ export const Large: Story = {
 
 export const IconWithPrimary: Story = {
   args: {
-    children: <Plus width={30} height={30} />,
+    children: <Plus width={ 30 } height={ 30 } />,
     variant: 'primary',
     isPadding: false,
     size: 'noPadding',
@@ -104,7 +113,7 @@ export const IconWithPrimary: Story = {
 
 export const IconWithSecondary: Story = {
   args: {
-    children: <Plus width={30} height={30}/>,
+    children: <Plus width={ 30 } height={ 30 } />,
     variant: 'secondary',
     isPadding: false,
     size: 'noPadding',
@@ -113,7 +122,7 @@ export const IconWithSecondary: Story = {
 
 export const IconWithOutline: Story = {
   args: {
-    children: <Plus width={30} height={30} />,
+    children: <Plus width={ 30 } height={ 30 } />,
     variant: 'outline',
     isPadding: false,
     size: 'noPadding',
@@ -122,7 +131,7 @@ export const IconWithOutline: Story = {
 
 export const IconWithGhost: Story = {
   args: {
-    children: <Plus width={30} height={30} />,
+    children: <Plus width={ 30 } height={ 30 } />,
     variant: 'ghost',
     isPadding: false,
     size: 'noPadding',

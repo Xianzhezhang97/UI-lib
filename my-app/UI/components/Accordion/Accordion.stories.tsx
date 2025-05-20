@@ -1,6 +1,6 @@
 import { withAnimation } from '@/.storybook/decorators/animation';
 import type { Meta, StoryObj } from '@storybook/react';
-import React from 'react';
+import { userEvent, within } from '@storybook/testing-library';
 import { Settings, X } from 'lucide-react';
 import { Accordion } from './Accordion';
 
@@ -9,9 +9,12 @@ const meta = {
   component: Accordion,
   parameters: {
     layout: 'centered',
+    header: 'Accordion',
   },
-  tags: ['autodocs'],
-  decorators: [withAnimation],
+  tags: [ 'autodocs' ],
+
+  decorators: [ withAnimation ],
+
   argTypes: {
     title: {
       control: 'text',
@@ -57,6 +60,8 @@ const meta = {
   },
 } satisfies Meta<typeof Accordion>;
 
+
+
 export default meta;
 type Story = StoryObj<typeof Accordion>;
 
@@ -66,6 +71,19 @@ export const Default: Story = {
     children:
       'This is the content of the accordion. It can contain any valid React node.',
   },
+  parameters: {
+    header: 'Default',
+  },
+  play: async ( { canvasElement } ) =>
+  {
+    const canvas = within( canvasElement );
+
+    const header = await canvas.getByText( 'Accordion Title' );
+    await userEvent.click( header );
+
+
+  },
+
 };
 
 export const WithCustomIcon: Story = {
@@ -74,6 +92,9 @@ export const WithCustomIcon: Story = {
     icon: <Settings className='h-5 w-5 text-gray-500' />,
     children: 'This accordion has a custom settings icon.',
   },
+  parameters: {
+    header: 'Custom Icon',
+  },
 };
 
 export const WithCustomDuration: Story = {
@@ -81,6 +102,9 @@ export const WithCustomDuration: Story = {
     title: 'Slow Animation',
     duration: 1,
     children: 'This accordion has a slower animation duration.',
+  },
+  parameters: {
+    header: 'Custom Duration',
   },
 };
 
@@ -93,6 +117,10 @@ export const WithCustomStyling: Story = {
     iconContainerClassName: 'bg-primary-100 rounded-full',
     children:
       'This accordion has custom styling applied to its header, content, and icon container.',
+  },
+  parameters: {
+    header: 'Custom Styling',
+    description: 'This accordion has custom styling applied to its header, content, and icon container.',
   },
 };
 
@@ -107,6 +135,9 @@ export const WithLongContent: Story = {
         <p>It is a component that can be used to create an accordion.</p>
       </div>
     ),
+  },
+  parameters: {
+    header: 'Long Content',
   },
 };
 
@@ -124,6 +155,9 @@ export const WithQuickOpenClose: Story = {
       </div>
     ),
   },
+  parameters: {
+    header: 'Quick Open/Close',
+  },
 };
 
 export const Disabled: Story = {
@@ -132,16 +166,25 @@ export const Disabled: Story = {
     disabled: true,
     children: 'This accordion is disabled and cannot be toggled.',
   },
+  parameters: {
+    header: 'Disabled',
+    description: 'This accordion is disabled and cannot be toggled.',
+  },
 };
 
 export const Controlled: Story = {
   args: {
     title: 'Controlled Accordion',
     isOpen: false,
-    onChange: (isOpen) =>
-      console.log(`Accordion is now ${isOpen ? 'open' : 'closed'}`),
+    onChange: ( isOpen ) =>
+      console.log( `Accordion is now ${ isOpen ? 'open' : 'closed' }` ),
     children: 'This accordion is controlled by the parent component.',
   },
+  parameters: {
+    header: 'Controlled',
+    description: 'This accordion is controlled by the parent component.',
+  },
+
 };
 
 export const WithMultipleSections: Story = {
@@ -158,20 +201,26 @@ export const WithMultipleSections: Story = {
       </Accordion>
       <Accordion
         title='Third Section with Custom Icon'
-        icon={<X className='h-5 w-5 text-gray-500' />}
+        icon={ <X className='h-5 w-5 text-gray-500' /> }
       >
         <p>This section has a custom info icon.</p>
       </Accordion>
     </div>
   ),
+  parameters: {
+    header: 'Multiple Sections',
+    description: 'This accordion has multiple sections.',
+  },
 };
 
 export const WithReducedMotion: Story = {
-  parameters: {
-    prefersReducedMotion: 'reduce',
-  },
+
   args: {
     title: 'Reduced Motion',
     children: 'This accordion respects the reduced motion preference.',
+  },
+  parameters: {
+    header: 'Reduced Motion',
+    description: 'This accordion respects the reduced motion preference.',
   },
 };

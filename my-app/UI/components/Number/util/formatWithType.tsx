@@ -15,18 +15,26 @@ import { formatWithSignificantDigits } from "./formatWithSignificantDigits";
 // locale: The locale to use for the number.
 // Returns: The formatted number as a string. 
 
-export const formatWithType = (num: number, useShortFormat: boolean, maxNumberPlaces: number, decimalPlaces: number, numberType: NumberType, locale: string): string => {
-    if (useShortFormat) return applyShortFormat(num, maxNumberPlaces, decimalPlaces);
+// For example:
+// formatWithType(1234567, true, 2, 2, 'standard', 'en-US') returns '1.2M'
+// formatWithType(1234567, false, 2, 2, 'standard', 'en-US') returns '1,234,567'
+// formatWithType(1234567, true, 2, 2, 'scientific', 'en-US') returns '1.23E6'
+// formatWithType(1234567, true, 2, 2, 'engineering', 'en-US') returns '1.23E6'
 
-    switch(numberType) {
-      case 'scientific':
-        return formatWithSignificantDigits(num, 'scientific', decimalPlaces, maxNumberPlaces);
-      case 'engineering':
-        return formatWithSignificantDigits(num, 'engineering', decimalPlaces, maxNumberPlaces);
-      default:
-        return new Intl.NumberFormat(locale, {
-          minimumFractionDigits: decimalPlaces,
-          maximumFractionDigits: decimalPlaces
-        }).format(num);
-    }
-  };
+export const formatWithType = ( num: number, useShortFormat: boolean, maxNumberPlaces: number, decimalPlaces: number, numberType: NumberType, locale: string ): string =>
+{
+  if ( useShortFormat ) return applyShortFormat( num, maxNumberPlaces, decimalPlaces );
+
+  switch ( numberType )
+  {
+    case 'scientific':
+      return formatWithSignificantDigits( num, 'scientific', decimalPlaces, maxNumberPlaces );
+    case 'engineering':
+      return formatWithSignificantDigits( num, 'engineering', decimalPlaces, maxNumberPlaces );
+    default:
+      return new Intl.NumberFormat( locale, {
+        minimumFractionDigits: decimalPlaces,
+        maximumFractionDigits: decimalPlaces
+      } ).format( num );
+  }
+};
