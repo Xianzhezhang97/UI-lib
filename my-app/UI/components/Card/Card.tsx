@@ -1,11 +1,25 @@
+import { Alert } from '@/UI/Components/Alert/Alert';
+import { ImagePro } from '@/UI/Components/Image/ImagePro';
 import { cn } from '@/UI/utils/cn';
 import { HTMLMotionProps, motion } from 'framer-motion';
 import React from 'react';
 
-export interface CardProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
+export interface CardProps extends Omit<HTMLMotionProps<'div'>, 'children'>
+{
+  src?: string;
+  alt?: string;
+  width?: string;
+  height?: string;
+  minWidth?: string;
+  minHeight?: string;
+  maxWidth?: string;
+  maxHeight?: string;
+  imagePosition?: 'top' | 'bottom' | 'left' | 'right';
+  imageRatio?: '1/1' | '4/3' | '16/9';
   variant?: 'primary' | 'secondary' | 'tertiary';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   children?: React.ReactNode;
+  imgClassName?: string;
 }
 
 const variantStyles = {
@@ -14,95 +28,90 @@ const variantStyles = {
   tertiary: 'bg-gray-100',
 };
 
-const sizeStyles = {
-  sm: 'p-[14px] rounded-[14px]',
-  md: 'p-[14px] rounded-[14px] md:p-[28px] md:rounded-[28px]',
-  lg: 'p-[14px] rounded-[14px] md:p-[28px] md:rounded-[28px] lg:p-[42px] lg:rounded-[42px]',
-  xl: 'p-[14px] rounded-[14px] md:p-[28px] md:rounded-[28px] lg:p-[42px] lg:rounded-[42px] xl:p-[56px] xl:rounded-[56px]',
+const roundedStyles = {
+  sm: 'rounded-[14px]',
+  md: 'rounded-[14px] md:rounded-[28px]',
+  lg: 'rounded-[14px] md:rounded-[28px] lg:rounded-[42px]',
+  xl: 'rounded-[14px] md:rounded-[28px] lg:rounded-[42px] xl:rounded-[56px]',
+};
+
+const paddingStyles = {
+  sm: 'p-[14px]',
+  md: 'p-[14px] md:p-[28px]',
+  lg: 'p-[14px] md:p-[28px] lg:p-[42px]',
+  xl: 'p-[14px] md:p-[28px] lg:p-[42px] xl:p-[56px]',
 };
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   (
-    { className, variant = 'primary', size = 'md', children, ...props },
+    {
+      className,
+      variant = 'primary',
+      size = 'md',
+      children,
+      imagePosition = 'top',
+      imageRatio = '1/1',
+      imgClassName,
+      src,
+      alt,
+      width = '200px',
+      height = '200px',
+      minWidth = '200px',
+      minHeight = '200px',
+      maxWidth = '200px',
+      maxHeight = '200px',
+      ...props
+    },
     ref,
-  ) => {
+  ) =>
+  {
     return (
       <motion.div
-        ref={ref}
-        className={cn(variantStyles[variant], sizeStyles[size], className)}
-        {...props}
+        ref={ ref }
+        className={ cn(
+          variantStyles[ variant ],
+          roundedStyles[ size ],
+          'overflow-hidden flex relative w-full',
+          width && `max-w-[${ width }]`,
+          height && `max-h-[${ height }]`,
+          minWidth && `min-w-[${ minWidth }]`,
+          minHeight && `min-h-[${ minHeight }]`,
+          maxWidth && `max-w-[${ maxWidth }]`,
+          maxHeight && `max-h-[${ maxHeight }]`,
+          imagePosition === 'top' && 'flex-col',
+          imagePosition === 'bottom' && 'flex-col-reverse',
+          imagePosition === 'left' && 'flex-row',
+          imagePosition === 'right' && 'flex-row-reverse',
+          className
+        ) }
+        { ...props }
       >
-        {children}
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        { src && (
+          <>
+            <ImagePro
+              src={ src }
+              alt={ alt || 'image' }
+              className={ cn( 'w-full h-full flex', imgClassName, imageRatio === '1/1' && 'aspect-square', imageRatio === '4/3' && 'aspect-[4/3]', imageRatio === '16/9' && 'aspect-[16/9]' ) }
+              withSkeleton
+              objectFit="contain"
+              rounded="lg"
+            />
+            { !alt && (
+              <Alert
+                variant="warning"
+                description="You need to provide alt text for the image"
+                className="absolute top-4 right-4"
+              />
+            ) }
+          </>
+        ) }
+        <div className={ cn( paddingStyles[ size ], 'w-full flex flex-col' ) }>
+          { children }
+        </div>
       </motion.div>
     );
-  },
+  }
 );
 
 Card.displayName = 'Card';
-
-// Card Subcomponents
-export const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn('flex flex-col space-y-1.5 pb-4', className)}
-    {...props}
-  />
-));
-CardHeader.displayName = 'CardHeader';
-
-export const CardTitle = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h3
-    ref={ref}
-    className={cn(
-      'text-2xl font-semibold leading-none tracking-tight',
-      className,
-    )}
-    {...props}
-  />
-));
-CardTitle.displayName = 'CardTitle';
-
-export const CardDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn('text-sm text-gray-500', className)}
-    {...props}
-  />
-));
-CardDescription.displayName = 'CardDescription';
-
-export const CardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn('pt-0', className)}
-    {...props}
-  />
-));
-CardContent.displayName = 'CardContent';
-
-export const CardFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      'flex md:flex-reverse md:flex-row  flex-col items-center pt-4 w-full gap-4',
-      className,
-    )}
-    {...props}
-  />
-));
-CardFooter.displayName = 'CardFooter';

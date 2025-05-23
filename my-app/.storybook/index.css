@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities; 
+
 h1 {
   @apply flex font-bold mb-6 tracking-wider w-full text-[1.4em] justify-start items-center;
 }

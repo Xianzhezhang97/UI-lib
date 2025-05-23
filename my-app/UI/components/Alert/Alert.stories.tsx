@@ -19,11 +19,11 @@ const meta = {
       padding: '16px',
     },
   },
-  tags: ['autodocs'],
+  tags: [ 'autodocs' ],
   argTypes: {
     variant: {
       control: 'select',
-      options: ['info', 'success', 'warning', 'error'],
+      options: [ 'info', 'success', 'warning', 'error' ],
     },
     closable: {
       control: 'boolean',
@@ -66,20 +66,6 @@ export const Error: Story = {
   },
 };
 
-export const WithCustomIcon: Story = {
-  args: {
-    title: 'Notification',
-    description: 'You have a new notification.',
-    icon: (
-      <i
-        // name='bell'
-        // size='xl'
-        className='text-blue-500 h-5 w-5'
-      />
-    ),
-  },
-};
-
 export const Closable: Story = {
   args: {
     title: 'Closable Alert',
@@ -88,14 +74,3 @@ export const Closable: Story = {
   },
 };
 
-export const TitleOnly: Story = {
-  args: {
-    title: 'Alert with title only',
-  },
-};
-
-export const DescriptionOnly: Story = {
-  args: {
-    description: 'Alert with description only',
-  },
-};

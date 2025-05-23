@@ -37,7 +37,7 @@ const variantStyles = {
   `,
 
   secondary: `
-    bg-gray-50 
+    bg-[#f2f2f2]
     text-primary-900 
     hover:bg-primary-700 
     hover:text-white
@@ -57,7 +57,7 @@ const variantStyles = {
   `,
 
   ghost: `
-    text-primary-900 
+    text-primary-900
     hover:bg-white
     group-hover:bg-primary-50
     group-hover:text-white
@@ -170,7 +170,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <div className={ cn( 'inline-flex items-center ratio-1/1',
         ) }>
           { isPadding && <div className='p-3'>{ isLoading ? ( <div className='animate-spin'><Loader /></div> ) : leftIcon && <span className=''>{ leftIcon }</span> }</div> }
-          <div className={ cn( 'flex items-center justify-center ', sizeStyles[ size ] ) }>{ children }</div>
+          <div className={ cn( 'flex items-center justify-center', ( !leftIcon && !rightIcon && !isLoading ) && sizeStyles[ size ] ) }>{ children }</div>
           { isPadding && <div className='p-3'>{ rightIcon && <span className=''>{ rightIcon }</span> }</div> }
         </div>
       </motion.button>

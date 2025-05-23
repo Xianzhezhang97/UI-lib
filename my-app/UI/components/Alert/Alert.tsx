@@ -1,20 +1,19 @@
 import { cn } from '@/UI/utils/cn';
 import { HTMLMotionProps, motion } from 'framer-motion';
 import
-  {
-    BookmarkCheck,
-    CircleAlert,
-    Info,
-    ShieldAlert,
-    X,
-  } from 'lucide-react';
+{
+  BookmarkCheck,
+  CircleAlert,
+  Info,
+  ShieldAlert,
+  X,
+} from 'lucide-react';
 import React from 'react';
-import { Card } from '../Card/Card';
 import { Typography } from '../Typography/Typography';
 
-export interface AlertProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
-  title?: string;
-  description?: string;
+export interface AlertProps extends Omit<HTMLMotionProps<'div'>, 'children'>
+{
+  description: string;
   variant?: 'info' | 'success' | 'warning' | 'error';
   onClose?: () => void;
   closable?: boolean;
@@ -44,11 +43,14 @@ const variantStyles = {
   },
 };
 
-const defaultIcons = {
-  info: <Info />,
-  success: <BookmarkCheck />,
-  warning: <CircleAlert />,
-  error: <ShieldAlert />,
+const defaultIcons = ( size: number ) =>
+{
+  return {
+    info: <Info size={ size } />,
+    success: <BookmarkCheck size={ size } />,
+    warning: <CircleAlert size={ size } />,
+    error: <ShieldAlert size={ size } />,
+  }
 };
 
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
@@ -64,56 +66,46 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
       ...props
     },
     ref,
-  ) => {
+  ) =>
+  {
     return (
       <motion.div
-        ref={ref}
+        ref={ ref }
         role='alert'
-        {...props}
+        className={ cn( variantStyles[ variant ].container,
+          'flex  gap-4 rounded-[14px] p-[14px] md:p-[28px] z-50',
+          className,
+        ) }
+        { ...props }
       >
-        <Card
-          size='sm'
-          className={ cn( variantStyles[ variant ].container,
-            'flex  gap-4',
-          title && 'items-center',
-          description && 'items-start',) }>
-          <div className='flex-shrink-0'>{icon || defaultIcons[variant]}</div>
+        <div
+          className={ 'flex items-center gap-4' }>
+          <div className='flex-shrink-0 '>{ icon || defaultIcons( 26 )[ variant ] }</div>
           <div className='flex-1 items-start justify-start'>
-            {title && (
-              <Typography
-                variant='h6'
-                weight='semibold'
-                className={cn(variantStyles[variant].container)}
-                color='default'
-              >
-                {title}
-              </Typography>
-            )}
-            {description && (
-              <Typography
-                variant='p'
-                
-                color='default'
-              >
-                {description}
-              </Typography>
-            )}
+
+            <Typography
+              variant='p'
+              className={ cn( 'text-[14px] md:text-[16px] lg:text-[18px]', variantStyles[ variant ].container ) }
+              color='default'
+            >
+              { description }
+            </Typography>
           </div>
-          {closable && (
-            <div className='ml-auto pl-3'>
+          { closable && (
+            <div className='ml-auto flex items-center pl-3'>
               <button
                 type='button'
-                className={cn(
+                className={ cn(
                   'inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2',
-                  variantStyles[variant].close,
-                )}
-                onClick={onClose}
+                  variantStyles[ variant ].close,
+                ) }
+                onClick={ onClose }
               >
                 <X />
               </button>
             </div>
-          )}
-        </Card>
+          ) }
+        </div>
       </motion.div>
     );
   },

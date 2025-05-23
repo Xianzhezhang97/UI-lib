@@ -1,14 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/**/*.{js,ts,jsx,tsx,mdx}',
+    '@/src/**/*.{js,ts,jsx,tsx,mdx}',
     './UI/**/*.{js,ts,jsx,tsx,mdx}',
+    './UI/**/*/*.{js,ts,jsx,tsx,mdx}',
     './.storybook/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
-  safelist: [
-    {
-      pattern: /ring-\[\#.*\]/,
-    },
   ],
   theme: {
     extend: {

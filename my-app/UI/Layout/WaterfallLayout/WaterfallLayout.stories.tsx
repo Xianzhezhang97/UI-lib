@@ -17,20 +17,10 @@ const generateItems = ( count: number ) =>
       <div key={ i } className="space-y-4 w-full flex flex-col">
         <ImagePro src={ `https://picsum.photos/500/${ height }?random=${ i }` } alt={ `User ${ i }` } withSkeleton objectFit='contain' rounded='lg' height={ height } />
         <motion.div
-          initial={ { opacity: 1, height: 'auto' } }
-          animate={ { opacity: 0, height: 0 } }
-          transition={ { duration: 0.5, delay: 3 } }
           className="space-y-4">
-          <Skeleton variant="text" size="md" className="w-3/4" />
-          <Skeleton variant="text" size="md" className="w-1/2" />
-          <Skeleton variant="text" size="md" className="w-2/3" />
-        </motion.div>
-        <motion.div
-          initial={ { opacity: 0, height: 0 } }
-          animate={ { opacity: 1, height: 'auto' } }
-          transition={ { duration: 0.5, delay: 3 } }
-          className="flex">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          <Skeleton variant="text" size="md" className="w-3/4" animationActive={ false } />
+          <Skeleton variant="text" size="md" className="w-1/2" animationActive={ false } />
+          <Skeleton variant="text" size="md" className="w-2/3" animationActive={ false } />
         </motion.div>
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3 ">
@@ -43,8 +33,7 @@ const generateItems = ( count: number ) =>
               <h3 className="text-xs">Scott is legend { i + 1 }</h3>
             </div>
           </div>
-
-          <Number value={ Math.floor( Math.random() * 10000 ) } useShortFormat maxNumberPlaces={ 3 } animation='fade' />
+          <Number value={ Math.floor( Math.random() * 10000 ) } useShortFormat maxNumberPlaces={ 3 } animation='none' />
         </div>
       </div>
     );
@@ -96,7 +85,7 @@ export const Default: Story = {
 export const SocialCard: Story = {
   args: {
     minColumnWidth: { sm: 250, md: 250, lg: 250, xl: 250 },
-    children: Array.from( { length: 1000 } ).map( ( _, i ) =>
+    children: Array.from( { length: 200 } ).map( ( _, i ) =>
     {
       const height = 100 + Math.floor( Math.random() * 200 );
       return (
